@@ -32,20 +32,20 @@ namespace Strategy
       
 			/* Role 2 - Passer. Tries to be in a position to pass to Role 3 at start of game. */
       param.PositionP.align = true;
-			float theta = 30 *PI/180.0;
+			float theta = 60 *PI/180.0;
       param.PositionP.x = ForwardX(KICKOFF_RADIUS*cos(theta));
       param.PositionP.y = KICKOFF_RADIUS*sin(theta);			
       param.PositionP.finalSlope  = 2*PI + ForwardX(theta);
       roleList[2].push_back(std::make_pair(Tactic::Position, param));
       
 			/* Role 3 - Receiver. Tries to be in a position to receive the pass. */
-      param.PositionP.x = -ForwardX(FREEKICK_RADIUS*cos(theta));
-      param.PositionP.y = -FREEKICK_RADIUS*sin(theta);
+      param.PositionP.x = -ForwardX(KICKOFF_RADIUS*5*cos(theta));
+      param.PositionP.y =  -KICKOFF_RADIUS*2.5*sin(theta);
       param.PositionP.finalSlope  = 0;
       roleList[3].push_back(std::make_pair(Tactic::Position, param));
       
 			/* Role 4 - vela. */
-      param.PositionP.x = -ForwardX(HALF_FIELD_MAXX/2);
+      param.PositionP.x = -ForwardX(HALF_FIELD_MAXX/3);
       param.PositionP.y = 0;
       param.PositionP.finalSlope  = 0;
       roleList[4].push_back(std::make_pair(Tactic::Position, param));

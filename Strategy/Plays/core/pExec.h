@@ -24,7 +24,7 @@ namespace Strategy
     Play::Result playResult;
     Robot*       robot[HomeTeam::SIZE];
     Util::CS*    tacticCS[HomeTeam::SIZE];
-
+		int roleIDMap[HomeTeam::SIZE]; 						// roleIDMap[i] = robot id with ith role.
   public:
     PExec(BeliefState* state);
 
@@ -43,8 +43,11 @@ namespace Strategy
 
     bool tryTransit(void);
 
-  public:
+	public:
+  
     void selectPlay(void);
+	
+	void selectfromGUI(int pID);
 
     void executePlay(void);
 

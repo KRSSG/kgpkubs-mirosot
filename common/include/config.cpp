@@ -37,7 +37,7 @@ const float ROTATION_FACTOR            = SELECT(0.05, 0.15);                //
 const float RFACTOR                    = SELECT(3,   0.3);
 const float RFACTOR_SMALL              = SELECT(0.6, 0.15);
 
-const int CLEARANCE_PATH_PLANNER       = SELECT(500, 700);               //mm
+const int CLEARANCE_PATH_PLANNER       = SELECT(500, 300);               //mm
 const int MID_FIELD_THRESH             = SELECT(10, 150);                       // mm
 const float BOT_RADIUS                 = SELECT(70, 150);                       // mm
 const float BALL_RADIUS                = SELECT(40, 40);                       // mm
@@ -46,7 +46,7 @@ const float COLLISION_DIST             = (BOT_RADIUS * 7);
 const int DRIBBLER_BALL_THRESH         = SELECT(110, 500);            // mm
 const int FREEKICK_RADIUS							 = SELECT(25,650);
 const int FREEBALL_RADIUS							 = SELECT(30,700);
-const int KICKOFF_RADIUS	             = SELECT(18,400);
+const int KICKOFF_RADIUS	             = SELECT(18,200);
 
 
 const int BOT_BALL_THRESH              = SELECT(105, 150);                  // mm
@@ -67,7 +67,7 @@ const float MAX_BACK_DRIBBLE_V_Y       = SELECT(500, 500);                  // m
 const float MAX_FRONT_DRIBBLE_V_Y      = SELECT(1200, 1200);                // mm/s
 const float MAX_DRIBBLE_V_X            = SELECT(200, 100);                 // mm/s
 const float MAX_DRIBBLE_R              = SELECT(3, 3);                      // rad
-const float DRIBBLER_BALL_ANGLE_RANGE  = SELECT(0.2f, 0.15f);                // rad
+const float DRIBBLER_BALL_ANGLE_RANGE  = SELECT(0.2f, 0.10f);                // rad
 const float SATISFIABLE_THETA          = SELECT(0.08f, 0.1f);                // rad
 const float SATISFIABLE_THETA_SHARP    = SELECT(0.01f, 0.01f);              // rad
 const float MAX_BALL_STEAL_DIST        = SELECT(800, 800);
@@ -85,5 +85,5 @@ const float NETWORK_DELAY = SELECT(0.05, 0.05);  // Network Delay in miliseconds
 //Distance Hysteresis factor for switching of roles
 const int HYSTERESIS = SELECT(20000, 300);
 
-const short STRATEGY_GUI_MULTICAST_PORT = 30002 ;
+const short STRATEGY_GUI_MULTICAST_PORT = 10001 ;
 const std::string STRATEGY_GUI_MULTICAST_ADDR = "224.5.23.1" ;

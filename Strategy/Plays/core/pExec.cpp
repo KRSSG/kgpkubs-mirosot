@@ -16,7 +16,7 @@ namespace Strategy
     for (int botID = 0; botID < HomeTeam::SIZE; ++botID)
     {
       tacticCS[botID] = new CS();
-      robot[botID]    = new Robot(*state, tacticCS[botID], botID);
+      robot[botID]    = new Robot(*state, tacticCS[botID], botID);			
     }
   } // PExec
 
@@ -31,13 +31,16 @@ namespace Strategy
   } // ~PExec
 
   void PExec::assignRoles(bool isReassign)
-  {
+  { 
+	for(int i=0;i<5;i++)
+		printf("Home Pose sexy: %d %d %d\n",i,state->homePos[i].x,state->homePos[i].y);
     debug(D_PEXEC, "Reassigning Roles", isReassign);
     if (playID == PlayBook::None)
     {
       return;
     }
     Play* currPlay = playList[playID];
+	
     bool goodBot[5] = {true, true, true, true, true};
     int goodBotCount = 5;
     // Initialization
@@ -50,18 +53,19 @@ namespace Strategy
     for (int roleIdx = 0; roleIdx < HomeTeam::SIZE; ++roleIdx) // Iterating over all roles
     {
       //TRACE(playID);
-      printf("Current Play: %d\n",playID);
+      printf("\n\n\n\n\n\nCurrent Play: %d\n\n\n\n\n",playID);
       if (currTacticIdx < currPlay->roleList[roleIdx].size()) // Tactic exists for the current role iteration
       {
         Tactic::ID    tID     = currPlay->roleList[roleIdx][currTacticIdx].first;
         Tactic::Param tParam  = currPlay->roleList[roleIdx][currTacticIdx].second;
         
-        int           bestBot;
+		int           bestBot;
 
         /* Assign the Goalie role to always the bot id 0 */
         //if(roleIdx != 0)
-        bestBot = robot[roleIdx]->tacticList[tID]->chooseBestBot(freeBots, &tParam);
-
+        bestBot = robot[roleIdx]->tacticList[tID]->chooseBestBot(freeBots, &tParam, roleIDMap[roleIdx]);
+		
+		roleIDMap[roleIdx] = bestBot;
         freeBots.remove(bestBot);
         currPlay->assignedBot[roleIdx] = bestBot;
         // Saving the current tactic to be executed by the bot selected
@@ -70,12 +74,13 @@ namespace Strategy
         // Updating the tactic of the selected bot
         tacticCS[bestBot]->enter();
         robot[bestBot]->tIDSh    = tID;
-        robot[bestBot]->tacticList[tID]->tState = (isReassign?(Tactic::RUNNING):(Tactic::INIT));
+        //robot[bestBot]->tacticList[tID]->tState = (isReassign?(Tactic::INIT):(Tactic::RUNNING));
         robot[bestBot]->tParamSh = tParam;
-        robot[bestBot]->tStateSh = (isReassign?(Tactic::RUNNING):(Tactic::INIT));
+        robot[bestBot]->tStateSh = (isReassign?(Tactic::INIT):(Tactic::RUNNING));
         tacticCS[bestBot]->leave();
       }
-      if(roleIdx == goodBotCount-1) {
+      if(roleIdx == goodBotCount-1) 
+		{
         for (int botID = 0; botID < HomeTeam::SIZE; ++botID) // Iterating over all bots - making them all free for role allocation
         {
           if(!goodBot[botID])
@@ -83,7 +88,7 @@ namespace Strategy
         }
       }
     }
-    Logger::toStdOut("Assigned roles for tactic index %d\n", currTacticIdx);
+    //Logger::toStdOut("Assigned roles for tactic index %d\n", currTacticIdx);
   } // asisgnRoles
 
   bool PExec::canTransit(void)
@@ -158,26 +163,41 @@ namespace Strategy
 
   void PExec::selectPlay(void)
   {
+		for(int roleID = 0; roleID < HomeTeam::SIZE; roleID++)
+			roleIDMap[roleID] = -1;
     select();
     playResult = Play::NOT_TERMINATED;
     currTacticIdx = 0;
-    assignRoles(false);
+    assignRoles(true);
   } // selectPlay
 
   void PExec::executePlay(void)
   {
-	playList[playID]->reevaluateRoleParams();
+	  playList[playID]->reevaluateRoleParams();
+	 // printf("******************** cantransit()  :: %d   trytransit() :: %d **************\n ",canTransit(),tryTransit());
     if (canTransit() && tryTransit())
-    {
+    { 
+	  
       ++currTacticIdx;
       assignRoles(false);
-    } else if( playList[playID]->shouldRolesReassign ) {
+    } else if( playList[playID]->shouldRolesReassign ) 
+	{
       playList[playID]->shouldRolesReassign = false;
       assignRoles(true);
     }
     printf("Play ID: %d\n",playID);
   } // executePlay
-
+	
+  void PExec::selectfromGUI(int pID){
+	
+	   Util::Logger::toStdOut("*************Entering PExec selectfromGUI\n*********************");
+	  for(int roleID = 0; roleID < HomeTeam::SIZE; roleID++)roleIDMap[roleID] = -1;
+	selectfromStr_Gui(pID);
+	playResult = Play::NOT_TERMINATED;
+    currTacticIdx = 0;
+    assignRoles(true);
+  }
+  
   void PExec::evaluatePlay(void)
   {
     if (playID == PlayBook::None)

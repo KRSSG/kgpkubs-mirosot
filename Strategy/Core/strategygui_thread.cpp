@@ -54,10 +54,10 @@ namespace Strategy
       ssize_t len = sock->recvFrom(buffer, sizeof(buffer), addr, port);
       if (len < 0) {
         std::cerr << std::strerror(errno) << '\n';
-        continue ;
+        continue;
       }
       
-      if(!strPkt->ParseFromArray(buffer, len)) {
+      if(!strPktSh->ParseFromArray(buffer, len)) {
         std::cerr << "Protobuf parsing error!\n";
         continue;
       }

@@ -5,20 +5,37 @@
 #include <string>
 static char playOptions[][100] = {
     "DefensiveSteal",
-    "DefenceSetPosition1",
-    "DefensiveGoToGoal",
-    "None",
-    "OffensePlay",
     "TestPlay",
     "SetPosition",
-    "Stop",
-    "PositionOurStrike",
-    "PositionOppStrike",
-    "OffenceSetPosition1",
-    "OurGoalKick",
-    "OppGoalKick",
-    "TieBreakerOurPenalty",
-    "TieBreakerOppPenalty",
+    "PenaltyOur",
+    "PenaltyOpp",
+        //"Stop",
+     "OurGoalKick",
+     "OppGoalKick",
+     "SuperOffense",
+     "Offense1",
+     "Offense2",
+     "SuperDefense",
+     "Defense1",
+     "Defense2",
+     "PositionOurKickoff",
+     "PositionOppKickoff",
+      //"Kickoff",
+    "PositionOurPenalty",
+     "TakeGoalKick",
+     "PositionOurFreeKick",
+     "PositionOppFreeKick",
+     "PositionOurFreeBall",
+     "PositionOppFreeBall",
+     "PositionOppPenalty",
+     "PositionOurGoalKick",
+     "PositionOppGoalKick",
+     "PositionGather",
+     "OppFreeBall",
+     "OurFreeBall",
+     "OppFreeKick",
+     "OurFreeKick",
+     "None"
 };
 int playLen = sizeof(playOptions)/sizeof(char[100]);
 static  char tacticOptions[][100] = {
@@ -31,9 +48,12 @@ static  char tacticOptions[][100] = {
     "GoalieOur",
     "GoalieOpp",
     "MarkBot",
+    "Pass",
+    "Kickoff",
     "Position",
     "PositionForPenalty",
     "PositionForStart",
+    "ReceiveBall",
     "Defend",
     "Attack",
     "Steal",
@@ -76,6 +96,7 @@ void MainWindow::on_pushButton_clicked()
 //    qDebug() << playid;
     packet.set_play(StrategyPacket::Play(playid));
     publisher->publish(packet);
+    qDebug() << "Sent play packet";
 }
 
 void MainWindow::on_pushButton_2_clicked()
@@ -90,4 +111,5 @@ void MainWindow::on_pushButton_2_clicked()
 //    qDebug() << playid;
     *packet.mutable_tactic() = t;
     publisher->publish(packet);
+    qDebug() << "Sent tactic packet";
 }

@@ -20,7 +20,13 @@
 #include "tStop.hpp"
 #include "tVelocity.hpp"
 #include "tCoverGoal.hpp"
+#include "tGoalKick.hpp"
 //#include "tDragToGoal.hpp"
 #include "tBackup.hpp"
 #include "TestgoToPoint.hpp"
 #include "Testbotrace.hpp"
+#include "tKickoff.hpp"
+
+//two bot tactics
+#include "tactic2.h"
+//#include "tAttackDuo.hpp"

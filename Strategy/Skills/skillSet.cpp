@@ -233,6 +233,10 @@ void SkillSet::_goToPoint(int botid, Vector2D<int> dpoint, float finalvel, float
     prevVel=profileFactor;
     r *= 0.5*profileFactor;
     t *= profileFactor;
+		//Arpit : Adding polar based code here
+		{
+			
+		}
 #if FIRA_COMM || FIRASSL_COMM
     comm->sendCommand(botID, (t - r), (t + r));
 #else
@@ -359,10 +363,10 @@ void SkillSet::_dribbleToPoint(int botid, Vector2D<int> dpoint, float finalvel, 
   float dist    = Vector2D<int>::dist(dpoint, state->homePos[botID]);  // Distance of next waypoint from the bot
   float alpha   = normalizeAngle(theta - phiStar);
   float beta;
-  if(fabs(alpha)  < fabs(atan2(clearance, dist)))
-    printf("ALPHA!\n");
-  else
-    printf("c/d\n");
+  //if(fabs(alpha)  < fabs(atan2(clearance, dist)))
+  //  printf("ALPHA!\n");
+  //else
+    //printf("c/d\n");
   beta = (fabs(alpha) < fabs(atan2(clearance, dist))) ? (alpha) : SGN(alpha) * atan2(clearance, dist);
   float thetaD  = normalizeAngle(theta + beta);
   float delta   = normalizeAngle(thetaD - phi);
@@ -374,10 +378,10 @@ void SkillSet::_dribbleToPoint(int botid, Vector2D<int> dpoint, float finalvel, 
     t = -t;
     r = -r;
   }
-  printf("delta  = %f\n", ballBotAngle * 180 / PI);
+  //printf("delta  = %f\n", ballBotAngle * 180 / PI);
   float profileFactor;
   profileFactor = MAX_BOT_SPEED * ((dist > MIN_DIST_FROM_TARGET) ? (1) : (dist / MIN_DIST_FROM_TARGET));
-  printf("dist= %f\n", dist);
+  //printf("dist= %f\n", dist);
   if(dist < BOT_POINT_THRESH)
   {
 #if FIRA_COMM || FIRASSL_COMM

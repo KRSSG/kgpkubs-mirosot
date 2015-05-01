@@ -230,7 +230,7 @@ namespace HAL
 
     // open device
     fd = ::open(device.c_str(), O_RDWR | O_SYNC);
-
+    perror("");
     if (fd < 0)
       return(false);
 

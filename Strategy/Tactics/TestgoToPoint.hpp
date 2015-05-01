@@ -27,7 +27,7 @@ namespace Strategy
       return true;
     }
 
-  int chooseBestBot(std::list<int>& freeBots, const Tactic::Param* tParam) const
+  int chooseBestBot(std::list<int>& freeBots, const Tactic::Param* tParam, int prevID) const
     {
       for (std::list<int>::iterator it = freeBots.begin(); it != freeBots.end(); ++it)
       {
@@ -74,7 +74,7 @@ namespace Strategy
 					//printf("im here\n\n");
 					  stopBot();
 				}
-				if(abs(state->homeVel[botID].x)<10 && abs(state->homeVel[botID].y)<15 && reach==true)
+				if(fabs(state->homeVel[botID].x)<10 && fabs(state->homeVel[botID].y)<15 && reach==true)
 				{
 				//	printf("\ndone\n %d",countit);
 					if(count==1)

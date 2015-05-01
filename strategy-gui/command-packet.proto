@@ -1,50 +1,62 @@
 message StrategyPacket {  
   enum Play {
     /// List all plays here
-    DefensiveSteal = 1;
-    DefenceSetPosition1 = 2;
-    //OnePassGoal 
-    //PassAndWait 
-    DefensiveGoToGoal = 3;
-    None = 4;
-    
-    OffensePlay = 5;
-    TestPlay = 6;
-    SetPosition = 7;
-    PositionOurStrike = 8;
-    PositionOppStrike = 9;
-    OffenceSetPosition1 = 10;
-    
-    OurGoalKick = 11;
-    OppGoalKick = 12;
-    TieBreakerOurPenalty = 13;
-    TieBreakerOppPenalty = 14;
-
+    TestPlay = 0;
+    SetPosition = 1;
+		PenaltyOur = 2;
+		PenaltyOpp = 3;
+    //Stop = 4;      
+    OurGoalKick = 5;
+    OppGoalKick = 6;
+    SuperOffense = 7;
+    Offense1 = 8;
+    Offense2 = 9;
+    SuperDefense = 10;
+    Defense1 = 11;
+    Defense2 = 12;
+		PositionOurKickoff = 13;
+		PositionOppKickoff = 14;
+		//Kickoff = 15;
+		PositionOurPenalty = 16;
+	  TakeGoalKick = 17;
+		PositionOurFreeKick = 18;
+		PositionOppFreeKick = 19;
+		PositionOurFreeBall = 20;
+		PositionOppFreeBall = 21;
+		PositionOppPenalty = 22;
+		PositionOurGoalKick = 23;
+		PositionOppGoalKick = 24;
+	  PositionGather = 25;
+		OppFreeBall = 26;
+		OurFreeBall = 27;
+		OppFreeKick = 28;
+		OurFreeKick = 29;
+    None = 30;
   }
   optional Play play = 1;
 
   enum TacticID {
-    Block = 1;            // Defend the goal a particular distance from the goal
-    ChargeBall =2;           // Set-play tactic
-    CoverGoal =3;
-    DragToGoal =4;           //Go to the ball and start dragging the ballto goal
-    DefendLine =5;           // Defend the ball from crossing a particular line on the field
-    DefendPoint =6;          // Defend the ball from a particular point on the field
-    GoalieOur =7;            // A special tactic just for the goalie for our side
-    GoalieOpp =8;            // Grant Goalie to opponent team. only for testing purpose.
-    MarkBot =9;              // Mark an opponent preventing them from getting the ball; getting to the goal; blocking a shot
-    //Pass;                 // Pass to a point
-    
-    Position =10;             // Go to the given position
-    PositionForPenalty =11;   // Set-play tactic
+    Block = 0;            // Defend the goal a particular distance from the goal
+    ChargeBall =1;           // Set-play tactic
+    CoverGoal =2;
+    DragToGoal =3;           //Go to the ball and start dragging the ballto goal
+    DefendLine =4;           // Defend the ball from crossing a particular line on the field
+    DefendPoint =5;          // Defend the ball from a particular point on the field
+    GoalieOur =6;            // A special tactic just for the goalie for our side
+    GoalieOpp =7;            // Grant Goalie to opponent team. only for testing purpose.
+    MarkBot =8;              // Mark an opponent preventing them from getting the ball; getting to the goal; blocking a shot
+    Pass = 9;                 // Pass to a point
+    Kickoff = 10;
+    Position =11;             // Go to the given position
+    PositionForPenalty =12;   // Set-play tactic
    // PositionForReceive;   // Pass Receive check
-    PositionForStart =12;     // Set-play tactic
-    //ReceiveBall;          // Receive Pass
-    Defend =13;               // Defend the ball from coming to our side
-    Attack =14;               // Attck the ball towards the goal      
-    Steal =15;                // Manipulate the ball to remove possession of it from another robot
-    Stop =16;                 // Stop the bot
-    Velocity =17;             // Move at a fixed velocity     
+    PositionForStart =13;     // Set-play tactic
+    ReceiveBall = 14;          // Receive Pass
+    Defend =15;              // Defend the ball from coming to our side
+    Attack =16;               // Attck the ball towards the goal      
+    Steal =17;                // Manipulate the ball to remove possession of it from another robot
+    Stop =18;                 // Stop the bot
+    Velocity =19;             // Move at a fixed velocity
   }
   message Tactic {
     required TacticID tID =1;

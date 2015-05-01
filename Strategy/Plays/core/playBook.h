@@ -1,6 +1,15 @@
 #ifndef PLAY_BOOK_H
 #define PLAY_BOOK_H
-
+#include <utility>
+//
+#include <list>
+#include "comdef.h"
+#include "tactic.h"
+#include "skillSet.h"
+#include "beliefState.h"
+#include "logger.h"
+#include "config.h"
+//
 // Forward Declarations
 namespace Strategy
 {
@@ -28,13 +37,24 @@ namespace Strategy
       SuperDefense,
       Defense1,
       Defense2,//12
-      OurFreeKick,
-      OppFreeKick,
 			//Arpit plays:
-			PositionOurKickoff, //sorry, i didnt see PositionOurStrike already did the same thing... so i removed it.
-			PositionOppKickoff,
-			Kickoff,
-			PositionOurPenalty,
+		PositionOurKickoff, //sorry, i didnt see PositionOurStrike already did the same thing... so i removed it.
+		PositionOppKickoff,
+		Kickoff,
+		PositionOurPenalty,
+	    TakeGoalKick,
+		PositionOurFreeKick,
+		PositionOppFreeKick,
+		PositionOurFreeBall,
+		PositionOppFreeBall,
+		PositionOppPenalty,
+		PositionOurGoalKick,
+		PositionOppGoalKick,
+	    PositionGather,
+		OppFreeBall,
+		OurFreeBall,
+		OppFreeKick,
+		OurFreeKick,
       None,
       MAX_PLAYS //16
     };
@@ -45,6 +65,7 @@ namespace Strategy
 
   public:
     PlayBook(const BeliefState* state);
+    
     
     ~PlayBook();
 

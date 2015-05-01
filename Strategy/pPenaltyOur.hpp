@@ -20,16 +20,16 @@ namespace Strategy
       assert(HomeTeam::SIZE ==5);
       Tactic::Param param;
       
-      /* Role 0 - Shooter */
-	  roleList[0].push_back(std::make_pair(Tactic::Attack,param));
+      /* Role 0 - Goalie */
+	  roleList[0].push_back(std::make_pair(Tactic::GoalieOur,param));
 	  
   /* Role 1 - Position 1*/
-	 roleList[1].push_back(std::make_pair(Tactic::Stop,param));
+	 roleList[1].push_back(std::make_pair(Tactic::Shoot,param));
       
  /* Role 1 - Position 2*/
       roleList[2].push_back(std::make_pair(Tactic::Stop,param));
       
- /* Role 1 - Position 3*/
+ /* Role 1 - Shoot*/
       roleList[3].push_back(std::make_pair(Tactic::Stop,param));
 	  
  /* Role 1 - Position 4*/

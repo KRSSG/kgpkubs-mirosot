@@ -24,7 +24,7 @@ namespace Strategy
     //CHOOSEbEST bOT AND the giving of parameters for going to the required point needs to be entered
     //These values need to be fed into the tparam
     //this code snippet will allow you to the place the bot at the required position...
-    int chooseBestBot(std::list<int>& freeBots, const Tactic::Param* tParam) const
+    int chooseBestBot(std::list<int>& freeBots, const Tactic::Param* tParam, int prevID) const
     {
       int minv = *(freeBots.begin());
       int mindis = 10;

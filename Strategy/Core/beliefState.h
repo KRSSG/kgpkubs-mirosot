@@ -5,6 +5,8 @@
 #include "comdef.h"
 #include "geometry.hpp"
 #include "../sslrefbox/client/game_state.h"
+#include "strategygui_thread.hpp"
+#include "command-packet.pb.h"
 
 // Forward Declarations
 namespace HAL
@@ -76,6 +78,8 @@ namespace Strategy
     
     bool pr_ourFreeKick;
     bool pr_oppFreeKick;
+		bool pr_ourFreeBall;
+		bool pr_oppFreeBall;
     bool pr_ourGoalKick;
     bool pr_oppGoalKick;
     bool pr_ourPenaltyKick;
@@ -177,7 +181,7 @@ namespace Strategy
     
     void computeBallInStrips();
     void updateStateFromRefree(HAL::RefBoxCmd &refBoxCmdSh);
-    
+	    
     // Functional Predicates
     int ourBotNearestToPoint(const int x, const int y);
     int oppBotNearestToPoint(const int x, const int y);

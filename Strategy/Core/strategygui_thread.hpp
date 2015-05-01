@@ -18,6 +18,7 @@ namespace Strategy
   public:
     static StrategyGUIThread& getInstance(StrategyPacket* strPktSh, Util::CS* strCS);
     ~StrategyGUIThread();
+	void run();
   private:
     Util::UDPSocket* sock;
     StrategyPacket*  strPktSh;
@@ -27,7 +28,7 @@ namespace Strategy
     
     /* Singleton Pattern class. */
     StrategyGUIThread(StrategyPacket* strPktSh, Util::CS* strCS);
-    void run();
+    
   };
 
 }

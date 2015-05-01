@@ -34,14 +34,14 @@ namespace Strategy
       
       /* Role 4 - Mid Field Player/Charger */
 
-      param.BlockP.dist = 1700;
-      if(state.pr_ball_in_opp_dbox  && !state.pr_ourBall)
-        roleList[3].push_back(std::make_pair(Tactic::ChargeBall,param));
-      else
-        roleList[3].push_back(std::make_pair(Tactic::Block,param));
+      param.BlockP.dist = 1000;
+      //if(state.pr_ball_in_opp_dbox  && !state.pr_ourBall)
+        //roleList[3].push_back(std::make_pair(Tactic::ChargeBall,param));
+      //else
+        roleList[3].push_back(std::make_pair(Tactic::ReceiveBall,param));
       
       /* Role 5 - Support Player */
-      roleList[4].push_back(std::make_pair(Tactic::ReceiveBall,param));
+      roleList[4].push_back(std::make_pair(Tactic::Block,param));
         
       computeMaxTacticTransits();
     }
@@ -59,7 +59,7 @@ namespace Strategy
 //        return true;
       if(!state.pr_gameRunning)
         return false;
-      if(state.pr_ballOppSide && !state.pr_ball_in_opp_dbox) 
+      if(state.pr_ballOppSide) 
         return true;
       return false;
     }

@@ -50,6 +50,8 @@ namespace Strategy
     
     pr_ourFreeKick     = false;
     pr_oppFreeKick     = false;
+		pr_ourFreeBall     = false;
+		pr_oppFreeBall     = false;
     pr_ourGoalKick     = false;
     pr_oppGoalKick     = false;
     pr_ourPenaltyKick = false;
@@ -270,6 +272,7 @@ namespace Strategy
   {
 		bool pr_ourKickOff_prev = pr_ourKickOff;
 		bool pr_ourPenaltyKick_prev = pr_ourPenaltyKick;
+		bool pr_ourGoalKick_prev = pr_ourGoalKick;
     resetPr();
 
     if(HomeTeam::COLOR == Simulator::BLUE_TEAM) {
@@ -312,13 +315,23 @@ namespace Strategy
 					pr_ourKickOffStart = true;
 				} else if(pr_ourPenaltyKick_prev) {
 					pr_ourPenaltyKickStart = true;
+				} else if(pr_ourGoalKick_prev) {
+					
 				}
         break;
         
       case 'K':
         pr_ourKickOff = true;
         break;
-        
+				
+			case 'Y':
+				pr_ourFreeBall = true;
+				break;
+				
+			case 'y':
+				pr_oppFreeBall = true;
+				break;
+				
       case 'k':
         pr_oppKickOff = true;
         break;
@@ -400,6 +413,8 @@ namespace Strategy
     
     pr_ourFreeKick     = false;
     pr_oppFreeKick     = false;
+		pr_ourFreeBall     = false;
+		pr_oppFreeBall     = false;
     pr_ourGoalKick     = false;
     pr_oppGoalKick     = false;
     pr_ourPenaltyKick = false;

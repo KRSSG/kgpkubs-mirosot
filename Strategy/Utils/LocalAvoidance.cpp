@@ -59,25 +59,25 @@ namespace Strategy
     closeBoundaries.clear();
     vector<int> xi;
     vector<int> yi;
-    xi.push_back(-2667); yi.push_back(464);
-    xi.push_back(-2658); yi.push_back(1992);//
-    xi.push_back(2633); yi.push_back(2024);//
-    xi.push_back(2690); yi.push_back(476);
-    xi.push_back(2980); yi.push_back(460);
-    xi.push_back(2980); yi.push_back(-496);
-    xi.push_back(2680); yi.push_back(-500);
-    xi.push_back(2700); yi.push_back(-2085);//
-    xi.push_back(-2705); yi.push_back(-2005);//
-    xi.push_back(-2665); yi.push_back(-465);
-    xi.push_back(-2955); yi.push_back(-452);
-    xi.push_back(-2945); yi.push_back(442);
+    xi.push_back(2500); yi.push_back(-400);
+    xi.push_back(2540); yi.push_back(-1932);//
+    xi.push_back(-2520); yi.push_back(-1890);//
+    xi.push_back(-2530); yi.push_back(-390);
+    xi.push_back(-2895); yi.push_back(-400);
+    xi.push_back(-2855); yi.push_back(520);
+    xi.push_back(-2520); yi.push_back(506);
+    xi.push_back(-2475); yi.push_back(1940);//
+    xi.push_back(2500); yi.push_back(1940);//
+    xi.push_back(2520); yi.push_back(495);
+    xi.push_back(2900); yi.push_back(495);
+    xi.push_back(2900); yi.push_back(-460);
     _addLineToBoundaries(xi,yi);
     // All pts (100,100) closer to (0,0)
     //timepass points
-    LocalAvoidance::closeBoundaries.push_back(std::pair<Point2D<int>, Point2D<int> >(Point2D<int>(2560, -1850), Point2D<int>(-2390, -1900)));
-    LocalAvoidance::closeBoundaries.push_back(std::pair<Point2D<int>, Point2D<int> >(Point2D<int>(-2390, -1900), Point2D<int>(-2530, 1850)));
-    LocalAvoidance::closeBoundaries.push_back(std::pair<Point2D<int>, Point2D<int> >(Point2D<int>(-2530, 1850), Point2D<int>(2600, 1830)));
-    LocalAvoidance::closeBoundaries.push_back(std::pair<Point2D<int>, Point2D<int> >(Point2D<int>(2600, 1830), Point2D<int>(2560, -1850)));
+    LocalAvoidance::closeBoundaries.push_back(std::pair<Point2D<int>, Point2D<int> >(Point2D<int>(2500, -1850), Point2D<int>(-2500, -1800)));
+    LocalAvoidance::closeBoundaries.push_back(std::pair<Point2D<int>, Point2D<int> >(Point2D<int>(-2500, -1800), Point2D<int>(-2500, 1850)));
+    LocalAvoidance::closeBoundaries.push_back(std::pair<Point2D<int>, Point2D<int> >(Point2D<int>(-2500, 1850), Point2D<int>(2450, 1830)));
+    LocalAvoidance::closeBoundaries.push_back(std::pair<Point2D<int>, Point2D<int> >(Point2D<int>(2450, 1830), Point2D<int>(2500, -1850)));
   }
   float area(int x1, int y1, int x2, int y2, int x3, int y3)
     {

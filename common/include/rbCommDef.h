@@ -65,8 +65,9 @@ namespace HAL
    //Combined FIRA Packet:
   typedef struct CombinedFIRAPacket
   {
-    int8_t preamble;                 // Preamble for the data packet        B0.0 - B0.7... 127 = BLUE, -127 = YELLOW
+    int8_t preamble;                 // Preamble for the data packet        B0.0 - B0.7... 126 = BLUE, 127 = YELLOW
     int8_t data[10];                 // Bot data, vl vr, id 0-4. ie vl0, vr0, vl1, vr1, ..., vl4, vr4
+	int8_t timestamp;                // timestamp
   } CombinedFIRAPacket;
   
   //----- Protocols for sending commands to the Robocup SSL Simulator -----//

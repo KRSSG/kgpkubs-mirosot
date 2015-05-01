@@ -37,7 +37,7 @@ namespace Strategy
     // List all Tactic ID -> Tactic object pairs here for each robot
     tacticList[Tactic::Block]               = new TBlock(state, botID);
     tacticList[Tactic::ChargeBall]          = new TCharge(state, botID);
-    tacticList[Tactic::CoverGoal]          = new TCoverGoal(state,botID);
+    tacticList[Tactic::CoverGoal]           = new TCoverGoal(state,botID);
     tacticList[Tactic::DragToGoal]          = new TDragToGoal(state, botID);    
     tacticList[Tactic::DefendLine]          = new TDefendLine(state, botID);
     tacticList[Tactic::DefendPoint]         = new TDefendPoint(state, botID);
@@ -45,6 +45,7 @@ namespace Strategy
     tacticList[Tactic::GoalieOpp]           = new TGoalKeepingOppSide(state, botID);
     tacticList[Tactic::MarkBot]             = new TMarkBot(state, botID);
     tacticList[Tactic::Pass]                = new TPass(state, botID);
+		tacticList[Tactic::Kickoff]         = new TKickoff(state, botID);
     tacticList[Tactic::Position]            = new TPosition(state, botID);
     tacticList[Tactic::PositionForPenalty]  = new TPositionForPenalty(state, botID);
     tacticList[Tactic::PositionForStart]    = new TPositionForStart(state, botID);
@@ -57,8 +58,12 @@ namespace Strategy
     tacticList[Tactic::Backup]              = new TBackup(state, botID);
    //tacticList[Tactic::PositionForReceive]  = new TPositionForReceive(state, botID);
     tacticList[Tactic::ReceiveBall]         = new TReceiveBall(state, botID);
-	tacticList[Tactic::TestgotoPoint] 		= new Testgotopoint(state,botID);
-	tacticList[Tactic::TestbotRace] 		= new TestbotRace(state,botID);
+		tacticList[Tactic::TestgotoPoint] 			= new Testgotopoint(state,botID);
+		tacticList[Tactic::TestbotRace] 				= new TestbotRace(state,botID);
+		tacticList[Tactic::GoalKick]						= new TGoalKick(state,botID);
+		tacticList[Tactic::Shoot]                  = new TShoot(state,botID);
+		//tacticList[Tactic::Clear]								= new TClear(state,botID);
+		//tacticList[Tactic::AttackDuo] = new TAttackDuo() -- how the fuck am i supposed to add two bot ids ??? :-(
     // Initialization check
     for (int tID = 0; tID < Tactic::MAX_TACTICS; ++tID)
     {
@@ -113,11 +118,11 @@ namespace Strategy
       // Reader (Exit ends)
 
       // Updating the tactic and its parameters to be executed next
-      tacticCS->enter();
-      tID    = tIDSh;
-      tParam = tParamSh;
+      tacticCS->enter();      
       if (tStateSh == Tactic::INIT)
       {
+				tID    = tIDSh;
+				tParam = tParamSh;
         tStateSh = Tactic::RUNNING;
         tacticList[tID]->initialize();
       }

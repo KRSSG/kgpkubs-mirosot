@@ -55,7 +55,7 @@ Refereemm_Main_Window::Refereemm_Main_Window(GameControl& gc_):
     yellow_timeout_time_label("Timeout Clock: "),
     yellow_timeouts_left_label("Timeouts left: "),
     yellow_yellowcard_but("Free ball"),
-    yellow_redcard_but("Red card"),
+    yellow_redcard_but("Goal Kick Start"),
     yellow_card_label(" "),
     blue_frame("Blue Team"),
     blue_kickoff_but("Kickoff (KP_3)"),
@@ -66,7 +66,7 @@ Refereemm_Main_Window::Refereemm_Main_Window(GameControl& gc_):
     blue_timeout_time_label("Timeout Clock: "),
     blue_timeouts_left_label("Timeouts left: "),
     blue_yellowcard_but("Free ball"),
-    blue_redcard_but("Red card"),
+    blue_redcard_but("Goal Kick Start"),
 
 
     //yellow_timeout_stop_but("Timeout Stop"),
@@ -738,6 +738,7 @@ int main(int argc, char* argv[])
    kit.run(*main);
    delete main;
    gamecontrol.close();
+   printf("exiting.\n");
    return 0;
 }
 

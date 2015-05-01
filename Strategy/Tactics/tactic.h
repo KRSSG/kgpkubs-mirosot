@@ -26,12 +26,12 @@ namespace Strategy
       CoverGoal,
 	  DragToGoal,           //Go to the ball and start dragging the ballto goal
       DefendLine,           // Defend the ball from crossing a particular line on the field
-      DefendPoint,          // Defend the ball from a particular point on the field
+	  DefendPoint,          // Defend the ball from a particular point on the field
       GoalieOur,            // A special tactic just for the goalie for our side
       GoalieOpp,            // Grant Goalie to opponent team. only for testing purpose.
       MarkBot,              // Mark an opponent preventing them from getting the ball, getting to the goal, blocking a shot
       Pass,                 // Pass to a point. for kickoff exclusively.
-      
+      Kickoff,              // kick ball into goal suring kickoff exclusively.
       Position,             // Go to the given position
       PositionForPenalty,   // Set-play tactic
      // PositionForReceive,   // Pass Receive check
@@ -43,8 +43,12 @@ namespace Strategy
       Stop,                 // Stop the bot
       Velocity,             // Move at a fixed velocity     
       Backup,
-	  TestgotoPoint,
-	  TestbotRace,
+			TestgotoPoint,
+			TestbotRace,
+			GoalKick,
+			Shoot,
+		//	AttackDuo,
+			//Clear,
       MAX_TACTICS          // Total number of tactics. All Implemented Tactics above this point
     };
     /* List the UnImplented Tactics below this line. When Implemented:
@@ -62,7 +66,9 @@ namespace Strategy
       struct type1
         { } GoalieP, ClearP, StealP, ShootP, StopP,TestgotopointP;
 
-      // Parameters for the tactic Block
+
+
+
       struct type2
       {
         float dist;   // Distance from the goal where the bot has to defend the goal
@@ -108,7 +114,7 @@ namespace Strategy
       struct type7
       {
         int x1, x2, y1, y2;	 			// y1=miny y2 = maxy
-      } DefendLineP;
+      } DefendLineP,DefendLineHorizP;
 
       struct type8
       {
@@ -197,7 +203,7 @@ namespace Strategy
      * assigned any role yet) depending on how suitable they are in being assigned
      * the tactic. It then chooses the bot with the highest score and assigns it the tactic.
      */
-    virtual int chooseBestBot(std::list<int>& freeBots, const Tactic::Param* tParam) const = 0;
+    virtual int chooseBestBot(std::list<int>& freeBots, const Tactic::Param* tParam, int prevID = -1) const = 0;
     /* This function takes in the current tactic parameter for a robot and
      * using the belief state info and the skill transition rules,
      * it either decides to transit to another skill or continues to run

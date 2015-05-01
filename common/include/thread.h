@@ -39,7 +39,6 @@ namespace Util
     void start();
 
     virtual void run() = 0;
-
     /* sleep(long ms)
      * holds back the thread's execution for
      * "ms" milliseconds

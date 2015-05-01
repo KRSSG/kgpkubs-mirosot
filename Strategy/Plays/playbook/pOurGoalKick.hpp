@@ -22,40 +22,18 @@ namespace Strategy
       AttackPlay   = PLAYTYPE_YES;
       Tactic::Param param;
       
-      /* Role 0 - Goalie */
-      roleList[0].push_back(std::make_pair(Tactic::GoalieOur,param));
-      
-      /* Role 1 - in our half position1*/
-      param.PositionP.x=ForwardX(-HALF_FIELD_MAXX/4);
-      param.PositionP.y= HALF_FIELD_MAXY/4;
-      param.PositionP.align=true;
-      param.PositionP.finalSlope= PI/2;
-      roleList[1].push_back(std::make_pair(Tactic::Position,param));
-      
-      /* Role 2 -in our half position 2 */
-      param.PositionP.x=ForwardX(-HALF_FIELD_MAXX/4);
-      param.PositionP.y= -HALF_FIELD_MAXY/4;
-      param.PositionP.align=true;
-      param.PositionP.finalSlope= PI/2;
-      roleList[2].push_back(std::make_pair(Tactic::Position,param));
-      
-      /* Role 3 - Bot1 ready to recieve ball in opp half*/
-      param.PositionP.x=ForwardX(2*HALF_FIELD_MAXX/3);
-      param.PositionP.y= -HALF_FIELD_MAXY/2;
-      param.PositionP.align=true;
-      param.PositionP.finalSlope= PI/2;
-      roleList[3].push_back(std::make_pair(Tactic::Position,param));
-      
-      /* Role 4 - Midfield Player */
-      param.PositionP.x=ForwardX(2*HALF_FIELD_MAXX/3);
-      param.PositionP.y= HALF_FIELD_MAXY/2;;
-      param.PositionP.align=true;
-      param.PositionP.finalSlope= PI/2;
-      roleList[4].push_back(std::make_pair(Tactic::Position, param));
-      
+			setTimeout(1);
+			//Role 0 Goal keeper
+			
+			roleList[0].push_back(std::make_pair(Tactic::GoalKick, param));
+			roleList[1].push_back(std::make_pair(Tactic::Stop, param));
+			roleList[2].push_back(std::make_pair(Tactic::Stop, param));
+			roleList[3].push_back(std::make_pair(Tactic::Stop, param));
+			roleList[4].push_back(std::make_pair(Tactic::Stop, param));
+
       computeMaxTacticTransits();
     }
-          
+
     inline ~POurGoalKick()
     {
       

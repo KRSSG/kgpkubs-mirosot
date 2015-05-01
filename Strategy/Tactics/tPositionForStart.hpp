@@ -36,7 +36,7 @@ namespace Strategy
      *                                                                                     x=-180,y=180;
                                                                                            x=-180,y=180;
      */
-    int chooseBestBot(std::list<int>& freeBots, const Tactic::Param* tParam) const
+    int chooseBestBot(std::list<int>& freeBots, const Tactic::Param* tParam, int prevID) const
     {
       int minv = *(freeBots.begin());
       int mindis = 10;

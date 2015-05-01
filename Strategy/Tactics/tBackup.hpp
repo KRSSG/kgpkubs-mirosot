@@ -40,7 +40,7 @@ namespace Strategy
     {
       return true;
     }
-     int chooseBestBot(std::list<int>& freeBots, const Tactic::Param* tParam) const
+     int chooseBestBot(std::list<int>& freeBots, const Tactic::Param* tParam, int prevID) const
     {
         //returns the bot with minimum distance
         Vector2D<int> ball = BP;

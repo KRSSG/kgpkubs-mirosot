@@ -10,7 +10,7 @@
 using namespace std;
 using namespace Util;
 using namespace HAL;
-  
+
 namespace Strategy
 {
   RefBoxThread* RefBoxThread::minstance = NULL;

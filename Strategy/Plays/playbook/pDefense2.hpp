@@ -32,7 +32,7 @@ namespace Strategy
       roleList[2].push_back(std::make_pair(Tactic::CoverGoal,param));
       
       /* Role 4 - Defender 3 */
-      param.BlockP.dist = 2000;
+      param.BlockP.dist = 1000;
       roleList[3].push_back(std::make_pair(Tactic::Block,param));
       
       /* Role 5 - Defender 2 */

@@ -7,7 +7,7 @@
 #include <unistd.h>
 using namespace std;
 using namespace Util;
-
+// Blue Bots Channel - D
 namespace HAL
 {
 #ifdef COMBINED_PACKET
@@ -164,7 +164,8 @@ namespace HAL
       for(int i=0; i<5; i++) {
         cs_internal[i].enter();
       }
-      command.preamble = Strategy::HomeTeam::COLOR == Simulator::BLUE_TEAM ? (int8_t)127 : (int8_t)126;
+      command.preamble = Strategy::HomeTeam::COLOR == Simulator::BLUE_TEAM ? (int8_t)126 : (int8_t)127;
+	  command.timestamp = 0;
       sPort.Write(&command, sizeof(CombinedFIRAPacket));
       
 #ifdef BOTLOG
@@ -186,7 +187,7 @@ namespace HAL
     int pwmWR = v_r;
     printf("Bot Velocity(firacomm) %d: %d %d\n", botID, pwmWL, pwmWR);
 #ifdef COMBINED_PACKET
-    cs_internal[botID].enter();
+    cs_internal[botID].enter();		
     command.data[botID*2] = (int8_t)pwmWL;
     command.data[botID*2+1] = (int8_t)pwmWR;
     cs_internal[botID].leave();
@@ -237,6 +238,7 @@ namespace HAL
     debug_cs->enter();
     debug_lines.push_back(line);
     debug_cs->leave();
+
   }
   int FIRAComm::xpos = 0;
   int FIRAComm::ypos = 0;

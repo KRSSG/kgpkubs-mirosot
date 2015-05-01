@@ -34,42 +34,22 @@ namespace Strategy
       return true;
     }
 		
-    int chooseBestBot(std::list<int>& freeBots, const Tactic::Param* tParam) const
+    int chooseBestBot(std::list<int>& freeBots, const Tactic::Param* tParam, int prevID) const
     {
       float minv = *(freeBots.begin());
       float mindis = 1e12;
-      const Vector2D<int> &ballpos = state->ballPos;
-      const Vector2D<float> &ballvel = state->ballVel;
-      if(state->ballVel.absSq() < ZERO_VELOCITY_THRESHOLD_SQ) {
-        // For stopped ball, take the bot which is nearest to the ball
-        for(std::list<int>::iterator it = freeBots.begin(); it != freeBots.end(); ++it)
-        {
-          const Vector2D<int> &botpos = state->homePos[*it];
-          
-          int dist = abs(state->homePos[*it].y + SGN(state->ballPos.y)*(HALF_FIELD_MAXY-2*BOT_RADIUS)/2);
-          if(dist  < mindis)
-          {
-            mindis =  dist;
-            minv = *it;
-          }
-        }
-      } else {
-        // For moving ball take the bot which is nearest to the ray of ball direction.
-        for(std::list<int>::iterator it = freeBots.begin(); it != freeBots.end(); ++it)
-        {
-          const Vector2D<int> &botpos = state->homePos[*it];
-          float dis_from_ball_line = abs((botpos.y - ballpos.y)/ballvel.y - (botpos.x - ballpos.x)/ballvel.x) + 
-                                      Vector2D<int>::dist(ballpos, botpos)/10;
-          if(state->ballVel.x * (botpos.x - ballpos.x) < 0)
-            dis_from_ball_line += 1e10;
-          if(dis_from_ball_line < mindis)
-          {
-            mindis = dis_from_ball_line;
-            minv = *it;
-          }
-        }
-      }
-      return minv;
+			for(std::list<int>::iterator it = freeBots.begin(); it != freeBots.end(); ++it)
+			{
+				const Vector2D<int> &botpos = state->homePos[*it];
+				
+				int dist = abs(state->homePos[*it].y + SGN(state->ballPos.y)*(HALF_FIELD_MAXY-2*BOT_RADIUS)/2);
+				if(dist  < mindis)
+				{
+					mindis =  dist;
+					minv = *it;
+				}
+			}
+			return minv;
     } // chooseBestBot)
     void execute(const Param& tParam)
     {
@@ -83,13 +63,14 @@ namespace Strategy
 					sID = SkillSet::GoToPoint;
 					sParam.GoToPointP.y = -SGN(state->ballPos.y)*(HALF_FIELD_MAXY-2*BOT_RADIUS)/2;          
 					sParam.GoToPointP.x = botdpointx(sParam.GoToPointP.y,sParam.GoToPointP.finalslope);
+					SkillSet::addCircle(sParam.GoToPointP.x,sParam.GoToPointP.y,50, 0xFFF000);
 					sParam.GoToPointP.align = false;
 					char debug[100];
 					sprintf(debug,"our ball %d\n",state->pr_ourBall);
 					//Client::debugClient->SendMessages(debug);
 					if(ball_coming())
 						iState = CHARGE;
-					if((/*ball_coming() || ((!state->pr_ourBall || botID==state->ourBotNearestToBall) && */(state->ballPos.y * state->homePos[botID].y > 0) && (ForwardX(state->ballPos.x) > ForwardX(state->homePos[botID].x) && (abs(state->ballPos.y) < abs(state->homePos[botID].y)) && ForwardX(state->ballVel.x)<0 )) || (/*(!state->pr_ourBall || botID==state->ourBotNearestToBall)&&*/Vector2D<int>::dist(state->ballPos,state->homePos[botID]) < 4*BOT_RADIUS))
+					if((/*ball_coming() || ((!state->pr_ourBall || botID==state->ourBotNearestToBall) && */(state->ballPos.y * state->homePos[botID].y > 0) && (ForwardX(state->ballPos.x) > ForwardX(state->homePos[botID].x) && (fabs(state->ballPos.y) < fabs(state->homePos[botID].y)) && ForwardX(state->ballVel.x)<0 )) || (/*(!state->pr_ourBall || botID==state->ourBotNearestToBall)&&*/Vector2D<int>::dist(state->ballPos,state->homePos[botID]) < 4*BOT_RADIUS))
 					{
 						iState = APPROACH;
 					}
@@ -101,13 +82,13 @@ namespace Strategy
           //printf("APPROACH\n");
           sID = SkillSet::GoToPoint;
           sParam.GoToPointP.y = state->ballPos.y;          
-          sParam.GoToPointP.x = state->ballPos.x;
+          sParam.GoToPointP.x = state->ballPos.x;					
 					Vector2D<int>Goal(OPP_GOAL_X,0);
 					sParam.GoToPointP.finalslope = Vector2D<int>::angle(Goal,state->ballPos);
           sParam.GoToPointP.align = true;
-					
+					SkillSet::addCircle(sParam.GoToPointP.x,sParam.GoToPointP.y,50, 0xFFF000);
 					//ballcoming = ball in cone formed by bot and goal max/min points
-          if(!((/*ball_coming() || ((!state->pr_ourBall || botID==state->ourBotNearestToBall) &&*/ (state->ballPos.y * state->homePos[botID].y > 0) && (ForwardX(state->ballPos.x) > ForwardX(state->homePos[botID].x)) && (abs(state->ballPos.y) < abs(state->homePos[botID].y)) && ForwardX(state->ballVel.x)<0 ) || (/*(!state->pr_ourBall || botID==state->ourBotNearestToBall) && */Vector2D<int>::dist(state->ballPos,state->homePos[botID]) < 4*BOT_RADIUS)))
+          if(!((/*ball_coming() || ((!state->pr_ourBall || botID==state->ourBotNearestToBall) &&*/ (state->ballPos.y * state->homePos[botID].y > 0) && (ForwardX(state->ballPos.x) > ForwardX(state->homePos[botID].x)) && (fabs(state->ballPos.y) < fabs(state->homePos[botID].y)) && ForwardX(state->ballVel.x)<0 ) || (/*(!state->pr_ourBall || botID==state->ourBotNearestToBall) && */Vector2D<int>::dist(state->ballPos,state->homePos[botID]) < 4*BOT_RADIUS)))
           {
             iState = POSITIONING;
           }
@@ -127,7 +108,7 @@ namespace Strategy
           sParam.GoToPointP.y = 0;
           sParam.GoToPointP.finalslope = Vector2D<int>::angle(Vector2D<int>(OPP_GOAL_X, 0), state->ballPos);
           sParam.GoToPointP.increaseSpeed = 1;
-          
+          SkillSet::addCircle(sParam.GoToPointP.x,sParam.GoToPointP.y,50, 0xFFF000);
           if(Vector2D<int>::dist(state->ballPos,state->homePos[botID]) > BOT_BALL_THRESH)
           {
             iState = POSITIONING;
@@ -174,8 +155,8 @@ namespace Strategy
             dpointx = ForwardX(2*HALF_FIELD_MAXX - BOT_RADIUS) - x, slope=atan(state->ballVel.y/state->ballVel.x),flag=1;
           if(ForwardX(x) < HALF_FIELD_MAXX)
           {
-            dpointx = ForwardX(HALF_FIELD_MAXX-GOAL_DEPTH);
-						if(ForwardX(x) >= HALF_FIELD_MAXX/2)
+            dpointx = ForwardX(HALF_FIELD_MAXX-GOAL_DEPTH-DBOX_WIDTH);
+						if(ForwardX(x) >= ForwardX(HALF_FIELD_MAXX)/2)
 							dpointy = SGN(state->ballVel.y)*OUR_GOAL_MAXY;
 						if(ForwardX(state->ballVel.x)>0)
 							slope=atan(-state->ballVel.x/state->ballVel.y),flag=2;
@@ -209,8 +190,8 @@ namespace Strategy
 
     bool ball_coming()
     {
-      int ballpredx = state->ballPos.x + state->ballVel.x/10;
-      int ballpredy = state->ballPos.y + state->ballVel.y/10;
+      int ballpredx = state->ballPos.x + state->ballVel.x/30;
+      int ballpredy = state->ballPos.y + state->ballVel.y/30;
       if(point_in_cone_of_bot_goal(ballpredx,ballpredy) || point_in_cone_of_bot_goal(state->ballPos.x,state->ballPos.y))
         return 1;
       return 0;

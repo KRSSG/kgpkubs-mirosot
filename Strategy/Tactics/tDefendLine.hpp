@@ -36,7 +36,7 @@ namespace Strategy
       return false;
     }
 
-    int chooseBestBot(std::list<int>& freeBots, const Tactic::Param* tParam) const
+    int chooseBestBot(std::list<int>& freeBots, const Tactic::Param* tParam, int prevID) const
     {
       int minv = *(freeBots.begin());
       int mindis = 10000;
@@ -56,8 +56,27 @@ namespace Strategy
 
     void execute(const Param& tParam)
     {
-
-      switch(iState)
+      if(tParam.DefendLineP.x1 == tParam.DefendLineP.x2)
+	  {
+		  sID = SkillSet::GoToPoint;
+          sParam.GoToPointP.x = tParam.DefendLineP.x1 ;
+          int temp = getBotDestPointY(tParam.DefendLineP.x1);
+		  //checking the given condition 
+		  if((abs(temp)>abs(tParam.DefendLineP.y1))&&(abs(temp)>abs(tParam.DefendLineP.y2))||((abs(temp)<abs(tParam.DefendLineP.y1))&&(abs(temp)<abs(tParam.DefendLineP.y2))))
+			 temp = (abs(temp-tParam.DefendLineP.y1)>abs(temp - tParam.DefendLineP.y2))?(tParam.DefendLineP.y2):(tParam.DefendLineP.y1);
+		   
+			   
+          sParam.GoToPointP.y = temp;
+					printf("\n Predicting point = %d \n",temp);
+          sParam.GoToPointP.align = false;
+          sParam.GoToPointP.finalslope = -PI / 2;  
+		   skillSet->executeSkill(sID, sParam);
+	  }
+	  else
+	  {
+	  
+	  /*
+	 switch(iState)
       {
         case POSITION:
           {
@@ -110,7 +129,7 @@ namespace Strategy
           sID = SkillSet::Spin;
           sParam.SpinP.radPerSec = -(MAX_BOT_OMEGA);
 
-          if(Vector2D<int>::dist(state->ballPos,state->homePos[botID]) > BOT_BALL_THRESH*1.1)
+          if(Vector2D<int>::dist(state->ballPos,state->homePos[botID]) > BOT_BALL_THRESH*1.5)
           {
             iState = POSITION;
           }
@@ -120,9 +139,48 @@ namespace Strategy
 
       }
       skillSet->executeSkill(sID, sParam);
+	  */
+	  }
+	  }
+    
+    //from tcovergoal
+	int getBotDestPointY(int posx)
+    {
+      Vector2D<int> ballFinalpos, botDestination, point;
+      int flag=2;
+      float balldistratio = fabs(state->ballPos.x)/(1*(posx))<1 ? fabs(state->ballPos.x)/(posx ):1 ;
+      
+      point.y = balldistratio*SGN(state->ballPos.y)*MIN(fabs(state->ballPos.y), OUR_GOAL_MAXY); 
+        printf("\npoint.y = %d\n",point.y);
+      /* Workaround for ball velocity 0*/
+      if( ( ( fabs(state->ballVel.y) + fabs(state->ballVel.x) < 50) ) || (ForwardX(state->ballVel.x)<0 && ForwardX(state->ballVel.x)>(-50)) )
+      {
+       if(ForwardX(state->ballPos.x) > ( posx ))
+        point.y = 0,flag=0;
+      }
+      else if(ForwardX(state->ballVel.x)>0 )
+      {
+        if(ForwardX(state->ballPos.x) > (posx))
+          point.y = 0,flag =0;
+      }
+      else if (ForwardX(state->ballVel.x) <=(-50) )
+      {
+        if(ForwardX(state->ballPos.x) > (-HALF_FIELD_MAXX*0.8) )
+        point.y = (state->ballVel.y/state->ballVel.x)*(posx - (state->ballPos.x)) + state->ballPos.y,flag = 1;
+      }
+      if(point.y > BOT_RADIUS) point.y -= 1.5*BOT_RADIUS;
+      else if(point.y < -BOT_RADIUS) point.y += 1.5*BOT_RADIUS;
+         //point.y = point.y + (state->ballVel.y > 0 ? BOT_RADIUS : -BOT_RADIUS);
+        
+      /* Set Limits on y to not exceed MAXY Limits*/
+        if(abs(point.y)>HALF_FIELD_MAXY)
+			point.y = SGN(point.y)*HALF_FIELD_MAXY*0.8 ;
+        
+		return point.y;
     }
-
-    void getbotdest(Param tParam,float *x,float *y,float *slope)
+	//
+	
+   /* void getbotdest(Param tParam,float *x,float *y,float *slope)
     {
       Vector2D<float>p1(tParam.DefendLineP.x1,tParam.DefendLineP.y1);
       Vector2D<float>p2(tParam.DefendLineP.x2,tParam.DefendLineP.y2);
@@ -132,13 +190,13 @@ namespace Strategy
       //calculating x , y and slope required
       if(p2.x==p1.x) 
       {
-        *x = p1.x;
-        *y = state->ballPos.y;
+        *x = p1.x ;
+        *y = state->ballPos.y ;//+ 0.3*state->ballVel.y;
         *slope = PI/2;
       }
       else if(p2.y==p1.y)
       {
-        *x = state->ballPos.x;
+        *x = state->ballPos.x ;//+ 0.3*state->ballVel.x;
         *y = p2.y;
         *slope = 0;
       }
@@ -155,14 +213,14 @@ namespace Strategy
       //setting limits on x and y
       if((*x-p1.x)*(*x-p2.x)>0 || (*y-p1.y)*(*y-p2.y)>0)
       {
-        if(abs(*x-p1.x)>abs(*x-p2.x) || abs(*y-p1.y)>abs(*y-p2.y))
+        if(fabs(*x-p1.x)>abs(*x-p2.x) || fabs(*y-p1.y)>abs(*y-p2.y))
           *x = p2.x,*y = p2.y;
         else *x = p1.x,*y = p1.y;
       }
       
       printf("before x = %f y -%f m = %f\n",*x,*y,*slope);
       
-    }
+    }*/
   }; // class TDefendLine
 } // namespace MyStrategy
 

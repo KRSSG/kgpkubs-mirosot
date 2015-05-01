@@ -13,6 +13,7 @@ namespace Strategy
 {
 void SkillSet::goToBallStraight(const SParam &param)
 	{
+		int vl,vr;
 		Vector2D<int> dest,spoint,ref;
 		vector<obstacle> obs;
 		spoint.x = HALF_FIELD_MAXX-DBOX_WIDTH*2;
@@ -24,8 +25,58 @@ void SkillSet::goToBallStraight(const SParam &param)
 		float ang_disp = normalizeAngle(Vector2D<int>::angle(displacement,ref));
 		float dist = Vector2D<int>::dist(dest, state->homePos[botID]);   
 		float init_angle = fabs(ang_disp - state->homeAngle[botID]);
-  comm->addCircle(dest.x,dest.y,BOT_BALL_THRESH/2);
-      FILE *mf;
+    comm->addCircle(dest.x,dest.y,BOT_BALL_THRESH/2);
+		
+		if(dist>BOT_BALL_THRESH)
+		{
+		if (fabs(ang_disp)<PI/20)
+		{
+				vl = vr = 70;
+				comm->sendCommand(botID,vl,vr);
+		}
+		else 
+			{
+					float turnAngleLeft = normalizeAngle(ang_disp); // Angle left to turn
+
+    if(turnAngleLeft>PI/2||turnAngleLeft<-PI/2)
+    {
+      if(turnAngleLeft>PI/2)
+        turnAngleLeft=turnAngleLeft-PI;
+      else
+        turnAngleLeft=turnAngleLeft+PI;
+    }
+    float factor = (turnAngleLeft+0.1*(turnAngleLeft))/(PI/2);
+
+    vr = 0.4*MAX_BOT_SPEED*(factor)/(PI/2);
+
+    //vr = -MAX_BOT_SPEED*(turnAngleLeft)/(PI/2);
+    vl = -vr;
+//    vr = -MAX_BOT_SPEED*turnAngleLeft/(PI/2);
+//    vl = -vr;
+    //printf("turn angle left: %f\n", turnAngleLeft);
+    //printf("State home angle: %f",state->homeAngle[botID]);
+    //printf("State Home pos: %d %d", state->homePos[botID].x,state->homePos[botID].y);
+    
+    if(fabs(turnAngleLeft) > DRIBBLER_BALL_ANGLE_RANGE/2) 
+			{
+#if FIRA_COMM || FIRASSL_COMM
+    comm->sendCommand(botID, vl, vr);        
+#else
+    comm->sendCommand(botID, vr, vl);
+#endif
+    }
+		else 
+		{
+      comm->sendCommand(botID, 0, 0);
+    }
+		  } 
+			
+			
+		}
+		else
+			comm->sendCommand(botID,0,0);
+		}
+  /*    FILE *mf;
       mf =  fopen("/home/robo/FIRA_BOT_TEST/Test_gotopoint.txt","a+");
 		if(reset==false)
 			 SkillSet::_goToPoint(botID,spoint,0,0,0);
@@ -126,7 +177,8 @@ bool increaseSpeed = true;
 
 				}
 				
-      
+     */ 
+		 
+		 
 			}
-	}
-  
+

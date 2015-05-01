@@ -13,19 +13,20 @@ public:
   Util::CS*  writer_preference;
   Worker(bool &running_, BeliefState &state_, Util::CS* writer_mutex_, Util::CS* writer_preference_):
   running(running_),state(state_),writer_mutex(writer_mutex_),writer_preference(writer_preference_) {}
-  void fake_refree(HAL::RefBoxCmd  &refBoxCmdSh) {
+  void fake_refree(HAL::RefBoxCmd  &refBoxCmdSh) 
+  {
     static int countdown = 0;
     if(state.pr_gameRunning) {
       const int ballx = state.ballPos.x;
       const int bally = state.ballPos.y;
-      if(ballx < ForwardX(-HALF_FIELD_MAXX) && bally >= OUR_GOAL_MINY && bally <= OUR_GOAL_MAXY)
+      if(ballx < ForwardX(-HALF_FIELD_MAXX + 2*GOAL_DEPTH) && bally >= OUR_GOAL_MINY && bally <= OUR_GOAL_MAXY)
       {
         refBoxCmdSh.cmdCounter++;
         refBoxCmdSh.cmd = 'S';
         countdown = 1000;
         SkillSet::comm->addAdjustBall(0, 0, 0, 0, 0);
         refBoxCmdSh.goalsYellow++;
-      } else if(ballx > ForwardX(HALF_FIELD_MAXX) && bally >= OPP_GOAL_MINY && bally <= OPP_GOAL_MAXY)
+      } else if(ballx > ForwardX(HALF_FIELD_MAXX-2*GOAL_DEPTH) && bally >= OPP_GOAL_MINY && bally <= OPP_GOAL_MAXY)
       {
         refBoxCmdSh.cmdCounter++;
         refBoxCmdSh.cmd = 'S';
@@ -43,6 +44,8 @@ public:
   }
   void run()
   {
+	//printf("WORKERRRR\n");
+	//assert(false);
     Util::CS loggerCS;
     Util::Logger logger("timelog.log", Util::Logger::Write, loggerCS);
     Kalman      kFilter;
@@ -60,8 +63,9 @@ public:
     RefBoxThread    refBoxThread = RefBoxThread::getInstance(&refBoxCmdSh, &refBoxCS);
     refBoxThread.start();
   #endif // RUN_REFBOX
-
+  
     state.refreeUpdated = false;
+	usleep(1000);
     while (running)
     {
       writer_preference->enter();
@@ -92,8 +96,10 @@ public:
 #endif // RUN_REFBOX
 #ifdef USE_FAKE_REFREE
       fake_refree(refBoxCmdSh);
+		
       if (refBoxCmdCounter != refBoxCmdSh.cmdCounter)
       {        
+		  
         state.refreeUpdated = true;
         refBoxCmdCounter      = refBoxCmdSh.cmdCounter;
         state.updateStateFromRefree(refBoxCmdSh);
@@ -101,7 +107,7 @@ public:
 #endif
       {
         if(state.refreeUpdated) 
-        {
+        {		
           state.refreeUpdated = false;
           Util::Logger::toStdOut("Command From Refee.. Reselecting play..\n");
           pExec.selectPlay();
@@ -111,7 +117,8 @@ public:
           Util::Logger::toStdOut("*************Play terminated.Select new play\n*********************");
           pExec.evaluatePlay();
           pExec.selectPlay();
-        } 
+        }
+		printf("executing play!\n");
         pExec.executePlay();
       }
 #ifdef COMBINED_PACKET

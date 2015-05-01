@@ -21,6 +21,7 @@ namespace Strategy
     bool         appl[PlayBook::MAX_PLAYS];
 
     void         select(void);
+	void		selectfromStr_Gui(int pID);
     virtual void updateWeights(Play::Result termResult) const = 0;
     
   public:

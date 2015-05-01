@@ -73,8 +73,8 @@ namespace Strategy
       homePose[id].y     = 2*HALF_FIELD_MAXY + BOT_RADIUS*4;
       homeVelocity[id].x = 0;
       homeVelocity[id].y = 0;
-      homePosK[id].x     = 1;
-      homePosK[id].y     = 1;
+      homePosK[id].x     = 1.0;
+      homePosK[id].y     = 1.0;
       homeAngle[id]      = 0;
       homeOmega[id]      = 0;
       homeAngleK[id]     = 1;
@@ -171,6 +171,8 @@ namespace Strategy
       for (int i = 0; i < blueNum; ++i)
       {
         SSL_DetectionRobot robot = detection.robots_blue(i);
+		
+		//Home Blue Bot Info
         int                id    = HAL::BlueMarkerMap[robot.robot_id()];
         
         int newx = robot.x() - CENTER_X;
@@ -232,7 +234,7 @@ namespace Strategy
         checkValidA(homeAngle[id], homeOmega[id], newangle);
     //    printf("homePos from kalman: id: %d, xy: %.0f %.0f\n", id, homePose[id].x, homePose[id].y);
       }
-      // Yellow robot info
+      // Yellow  Away robot info
       uniqueBotIDs.clear();
       for (int i = 0; i < yellowNum; ++i)
       {
@@ -297,12 +299,14 @@ namespace Strategy
     }
     else
     {
-      // Yellow robot info
+      // Home Yellow robot info
       uniqueBotIDs.clear();
       for (int i = 0; i < yellowNum; ++i)
       {
         SSL_DetectionRobot robot = detection.robots_yellow(i);
-        int                id    = HAL::YellowMarkerMap[robot.robot_id()];
+        int id    = HAL::YellowMarkerMap[robot.robot_id()];
+		//printf("Kalman:: ID%d ",id);
+		//assert(false);
         if(uniqueBotIDs.find(id) != uniqueBotIDs.end())
           continue;
         uniqueBotIDs.insert(id);
@@ -330,6 +334,8 @@ namespace Strategy
         float  predictedPoseY    = homePose[id].y + homeVelocity[id].y * (delTime);
         float  lastPoseY         = homePose[id].y;
         homePose[id].y           = predictedPoseY + homePosK[id].y * (newy - predictedPoseY);
+		//assert(homePose[id].x!=NULL);
+		
         float lastVelocityy      = homeVelocity[id].y;
         homeVelocity[id].y       = (homePose[id].y - lastPoseY) / delTime;
         homeAcc[id].y            = (homeVelocity[id].y - lastVelocityy) / delTime;
@@ -349,6 +355,7 @@ namespace Strategy
         checkValidA(homeAngle[id], homeOmega[id], newangle);
         homeLastUpdateTime[id]   = timeCapture;
       }
+	  
       // Blue robot info
       uniqueBotIDs.clear();
       for (int i = 0; i < blueNum; ++i)
@@ -481,7 +488,8 @@ namespace Strategy
       double delTime = 0;
       state.homePos[botID]   = Vector2D<int>(homePose[botID].x, homePose[botID].y);/*Vector2D<int>(homePose[botID].x+homeVelocity[botID].x*delTime, 
       homePose[botID].y+homeVelocity[botID].y*delTime);*/
-      state.homeAngle[botID] = homeAngle[botID];// + homeOmega[botID]*delTime;
+      printf("Home Pose: %d %d %d\n",botID,state.homePos[botID].x,state.homePos[botID].y);
+	  state.homeAngle[botID] = homeAngle[botID];// + homeOmega[botID]*delTime;
       state.homeVel[botID]   = homeVelocity[botID];
       state.homeOmega[botID] = homeOmega[botID];
       state.homeAcc[botID]   = homeAcc[botID];

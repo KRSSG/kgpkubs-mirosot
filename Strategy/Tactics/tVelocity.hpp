@@ -8,6 +8,8 @@
 #include "beliefState.h"
 #include "logger.h"
 #include "config.h"
+#include <fstream>
+#include <sys/time.h>
 
 namespace Strategy
 {
@@ -26,7 +28,7 @@ namespace Strategy
       return false;
     }
 
-    int chooseBestBot(std::list<int>& freeBots, const Tactic::Param* tParam) const
+    int chooseBestBot(std::list<int>& freeBots, const Tactic::Param* tParam, int prevID) const
     {
       for (std::list<int>::iterator it = freeBots.begin(); it != freeBots.end(); ++it)
       {
@@ -39,7 +41,17 @@ namespace Strategy
 
     void execute(const Param& tParam)
     {
+		//for logging ball position
+		FILE *out = fopen("/home/robocup/ballPosLog2.txt", "a");
+		struct timeval nowTime;
+		gettimeofday(&nowTime, NULL);
+		 double elapsedMs = (nowTime.tv_sec*1000.0+nowTime.tv_usec/1000.0);
+		fprintf(out, "%d %d %.18lf\n", state->ballPos.x, state->ballPos.y, elapsedMs);
+//		out << state->ballPos.x << " " << state->ballPos.y  << " " << elapsedMs<< endl;
+//		out.close();
+		fclose(out);
       printf("Velocity BotID: %d\n",botID);
+	  printf("Left Right %d %d\n", tParam.VelocityP.vl, tParam.VelocityP.vr);
       // Select the skill to the executed next
       sID = SkillSet::Velocity;
       sParam.VelocityP.vl = tParam.VelocityP.vl;

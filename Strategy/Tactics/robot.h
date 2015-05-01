@@ -3,6 +3,7 @@
 
 #include "thread.h"
 #include "tactic.h"
+#include "tactic2.h"
 
 // Forward Declarations
 namespace Util

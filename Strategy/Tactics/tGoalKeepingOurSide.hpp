@@ -39,8 +39,10 @@ namespace Strategy
       return false;
     }
 
-    int chooseBestBot(std::list<int>& freeBots, const Tactic::Param* tParam) const
-    {
+    int chooseBestBot(std::list<int>& freeBots, const Tactic::Param* tParam, int prevID) const
+    { 
+	  //sleep(3);
+	  static int counter = 0 ;
       int minv = *(freeBots.begin());
       int mindis = 1000000000;
       Point2D<int> goalPos(ForwardX(-(HALF_FIELD_MAXX)), 0);
@@ -51,22 +53,26 @@ namespace Strategy
                 Vector2D<int> goal;
                 goal.x = OUR_GOAL_X;
                 goal.y = 0;
-                float dist_from_goal = Vector2D<int>::dist(state->homePos[*it], goal);
-                
+                float dist_from_goal = Vector2D<int>::dist(state->homePos[*it],goal) ;  
+               
+				
                 if(dist_from_goal + factor * perpend_dist < mindis)
         {
           mindis = dist_from_goal + factor * perpend_dist;
           minv = *it;
         }
       }
-      
-      return minv;
+	  //printf(" :: %d ::",minv);
+	//if(counter==2)
+      //assert(tParam=0);
+	//counter++;
+	return minv;
     } // chooseBestBot
 
     void execute(const Param& tParam)
     {
-      printf("GoalKeepOur BotID: %d\n",botID);
       
+      printf("Goalie Bot ID%d \n",botID);
       movementError[movementErrorIndex++] = (Vector2D<int>::distSq(prevBotPos, state->homePos[botID])) + (prevBotAngle - state->homeAngle[botID])*(prevBotAngle - state->homeAngle[botID])*50000;
       prevBotPos = state->homePos[botID];
       prevBotAngle = state->homeAngle[botID];
@@ -81,26 +87,39 @@ namespace Strategy
         skillSet->executeSkill(sID, sParam);
         return;
       }*/
+	  
+	  	  int dist = Vector2D<int>::dist(state->homePos[botID],state->ballPos);
       
       if (!isGoalKeeperInPosition() )
       {
-        sID = SkillSet::GoToPointGoalie;
+        sID = SkillSet::GoToPoint;
         sParam.GoToPointP.align = false;
         sParam.GoToPointP.finalslope =- PI / 2;
-        sParam.GoToPointP.x = ForwardX(-HALF_FIELD_MAXX + GOAL_DEPTH + BOT_RADIUS*1.5) /*/4*/;
+        sParam.GoToPointP.x = ForwardX(-HALF_FIELD_MAXX + GOAL_DEPTH + BOT_RADIUS*1.2) /*/4*/;
         sParam.GoToPointP.y = 0;
         sParam.GoToPointP.finalVelocity = 0;
 
       }
       else
       {
-          sID = SkillSet::GoToPointGoalie;
-          sParam.GoToPointP.x = ForwardX(-HALF_FIELD_MAXX + GOAL_DEPTH + BOT_RADIUS*1.5) /*/4*/;
-          int temp = getBotDestPointY();
-          sParam.GoToPointP.y = temp;
-          sParam.GoToPointP.align = false;
-          sParam.GoToPointP.finalVelocity = 0;
-          sParam.GoToPointP.finalslope = -PI / 2;
+		  if(dist < 1.5*BOT_BALL_THRESH)
+		  {
+			  sID = SkillSet::Spin;
+			  if(state->ballPos.y < 0 )
+				  sParam.SpinP.radPerSec = -MAX_BOT_OMEGA   ;
+			else
+				  sParam.SpinP.radPerSec = +MAX_BOT_OMEGA   ;
+		  }
+		  else
+		  {
+			  sID = SkillSet::GoToPoint;
+			  sParam.GoToPointP.x = ForwardX(-HALF_FIELD_MAXX + GOAL_DEPTH + BOT_RADIUS*1.2) /*/4*/;
+			  int temp = getBotDestPointY();
+			  sParam.GoToPointP.y = temp;
+			  sParam.GoToPointP.align = false;
+			  sParam.GoToPointP.finalVelocity = 0;
+			  sParam.GoToPointP.finalslope = -PI / 2;
+		  }
       }
       
       skillSet->executeSkill(sID, sParam);
@@ -111,7 +130,7 @@ namespace Strategy
     bool isGoalKeeperInPosition()
     {
       if ((ForwardX(state->homePos[botID].x) >  (-HALF_FIELD_MAXX + GOAL_DEPTH)) &&
-          (ForwardX(state->homePos[botID].x) <= (-HALF_FIELD_MAXX + GOAL_DEPTH + BOT_RADIUS*3)) &&
+          (ForwardX(state->homePos[botID].x) <= (-HALF_FIELD_MAXX + GOAL_DEPTH + BOT_RADIUS*2)) &&
           (state->homePos[botID].y >= OUR_GOAL_MINY - DBOX_HEIGHT) &&
           (state->homePos[botID].y <= (OUR_GOAL_MAXY + DBOX_HEIGHT)))
         return true;
@@ -129,8 +148,8 @@ namespace Strategy
       
       point.y = balldistratio*SGN(state->ballPos.y)*MIN(fabs(state->ballPos.y), OUR_GOAL_MAXY); 
     
-      /* Workaround for ball velocity 0*/
-      if( ( ( fabs(state->ballVel.y) + fabs(state->ballVel.x) < 50) ) || (ForwardX(state->ballVel.x)<0 && ForwardX(state->ballVel.x)>(-50)) )
+   //    Workaround for ball velocity 0
+      if( ( ( fabs(state->ballVel.y) + fabs(state->ballVel.x) < 100) ) || (ForwardX(state->ballVel.x)<0 && ForwardX(state->ballVel.x)>(-100)) )
       {
        if(ForwardX(state->ballPos.x) > ( -HALF_FIELD_MAXX*0.3))
         point.y = 0,flag=0;
@@ -145,7 +164,7 @@ namespace Strategy
         if(ForwardX(state->ballPos.x) > (-HALF_FIELD_MAXX*0.8) )
         point.y = (state->ballVel.y/state->ballVel.x)*(ForwardX(-HALF_FIELD_MAXX+ GOAL_DEPTH + BOT_RADIUS*1.5) - (state->ballPos.x)) + state->ballPos.y,flag = 1;
       }
-        
+
       /* Set Limits on y to not exceed DBOX Y Limits*/
       if(point.y < OUR_GOAL_MINY + BOT_RADIUS)
        {
@@ -162,6 +181,7 @@ namespace Strategy
           else
           point.y = 0;
        }
+	   
 
           
       return point.y;

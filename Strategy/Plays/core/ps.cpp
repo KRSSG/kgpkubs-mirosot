@@ -69,7 +69,18 @@ namespace Strategy
       randVal = 0.999999f;
     }
 
-    playID = PlayBook::None;
+     // playID = PlayBook::PenaltyOur ;
+     //playID = PlayBook::PositionOurPenalty;
+	 //playID = PlayBook::PositionGather;
+    //playID = PlayBook::PositionOurFreeBall;
+	  playID = PlayBook::OurFreeKick;
+    //playID = PlayBook::PenaltyOur;
+	 //playID = PlayBook::Kickoff ;
+	//playID = PlayBook::PositionOurKickoff;
+	
+	//printf("pop called");
+	//playID = PlayBook::Offense1;
+/*
     for (int pID = 0; pID < num_plays; ++pID)
     {
       cumProb += pProb[pID];
@@ -80,17 +91,24 @@ namespace Strategy
         break;
       }
     }
-    
+*/
+
 		/*Arpit: treating special case for our penalty kcik and kickoff*/
-		if(state->pr_ourKickOffStart) {
+	/*if(state->pr_ourKickOffStart) {
 			playID = PlayBook::Kickoff;
 		} else if(state->pr_ourPenaltyKickStart) {
 			playID = PlayBook::PenaltyOur;
-		} 
+		}
+	if (playID == PlayBook::None)
+		playID = PlayBook::Offense1;*/
 		
-    //playID = PlayBook::PositionOurPenalty;
+		//cout << "yes";
     assert(playID != PlayBook::None); // No play selected
 
     playList[playID]->startTimer();
   } // select
+
+  void PS::selectfromStr_Gui(int pID){
+	  playID = (Strategy::PlayBook::PlayID)pID;
+  }
 } // namespace Strategy

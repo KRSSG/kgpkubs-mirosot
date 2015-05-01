@@ -23,13 +23,13 @@ namespace Strategy
       
       Tactic::Param param;     
 			
-			setTimeout(3);
+			setTimeout(0.5,10);
 			
 			/* Role 0 - Passer */
       roleList[0].push_back(std::make_pair(Tactic::Pass,param));
       
       /* Role 1 - Stop*/
-      roleList[1].push_back(std::make_pair(Tactic::Stop,param));
+      roleList[1].push_back(std::make_pair(Tactic::Kickoff,param));
       
 			/* Role 2 - stop */
       roleList[2].push_back(std::make_pair(Tactic::Stop,param));
@@ -55,9 +55,7 @@ namespace Strategy
 
     inline Result done(void) const
     {
-      /*Adding code here even though this should be handled by tactic completion. */
-			if(ForwardX(state.ballPos.x) < -200)
-				return COMPLETED;
+      /*Adding code here even though this should be handled by tactic completion. */			
       // printf("Done condition not finalised\n");
       return NOT_TERMINATED;
     }

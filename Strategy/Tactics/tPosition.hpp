@@ -33,8 +33,9 @@ namespace Strategy
     //CHOOSEbEST bOT AND the giving of parameters for going to the required point needs to be entered
     //Choose best bot also needs to get the params that the tactic has in order to choose the best bot....
 
-    int chooseBestBot(std::list<int>& freeBots, const Tactic::Param* tParam) const
+    int chooseBestBot(std::list<int>& freeBots, const Tactic::Param* tParam, int prevID) const
     {
+		//printf("cvkukvswgviulgsliefvgb.fvr'oib;ojgviabnLUGJV	EBvhbgrjEBFHV;OIAEH/lkdfnblkjthfivojkr");
       assert(tParam != 0);
       int minv   = *(freeBots.begin());
       int mindis = 1000000000;

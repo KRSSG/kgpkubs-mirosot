@@ -50,7 +50,7 @@ namespace Strategy
       return true;
     }
 
-    int chooseBestBot(std::list<int>& freeBots, const Tactic::Param* tParam) const
+    int chooseBestBot(std::list<int>& freeBots, const Tactic::Param* tParam, int prevID) const
     {
       int minv = *(freeBots.begin());
 	  float angle_difference = firaNormalizeAngle(Vector2D<int>::angle(Vector2D<int>(OPP_GOAL_X, 0), state->ballPos)- state->homeAngle[*(freeBots.begin())]);
@@ -67,11 +67,11 @@ namespace Strategy
 //		angle_difference =  fabs(firaNormalizeAngle(state->homeAngle[*it]-normalizeAngle(Vector2D<int>::angle(Vector2D<int>(OPP_GOAL_X, 0), state->ballPos))))+ fabs(firaNormalizeAngle((Vector2D<int>::angle(state->homePos[*it],Vector2D<int>(OPP_GOAL_X, 0)))));
       angle_difference = botball_orientation_diff + finalOrientationDiff;
   //float x_diff = ForwardX(state->ballPos.x)-ForwardX(state->homePos.x);
-		float weight;
+				float weight;
     //printf("%d >>>>>>>>>> %f , %f\n", *it,dis_from_ball,angle_difference);
-		weight = dis_from_ball + ANGLE_TO_DIST * angle_difference;
-		//if(*it == botID)
-      //    weight -= HYSTERESIS;
+				weight = dis_from_ball + ANGLE_TO_DIST * angle_difference;
+				if(*it == prevID)
+					weight -= HYSTERESIS;
         if(weight < minwt)
         {
           minwt = dis_from_ball ;
@@ -79,6 +79,8 @@ namespace Strategy
         }
       }
       //Util::Logger::toStdOut("Selected bot %d\n", minv);
+	  printf(" :: %d ::",minv);
+      //assert(tParam=0);
       return minv;
 
     } // chooseBestBot
@@ -124,7 +126,7 @@ namespace Strategy
       if(movementErrorSum < 500 && tParam.AttackP.rotateOnError)
       {
         sID = SkillSet::Spin;
-        sParam.SpinP.radPerSec = MAX_BOT_OMEGA * (state->homePos[botID].y > 0? ForwardX(-1): ForwardX(1));
+        sParam.SpinP.radPerSec = MAX_BOT_OMEGA * (state->homePos[botID].y > 0? ForwardX(1): ForwardX(-1));
         skillSet->executeSkill(sID, sParam);
         return;
       }
@@ -140,9 +142,9 @@ namespace Strategy
           {
             sID = SkillSet::Spin;
             if(iState == SPINNING_CW)
-              sParam.SpinP.radPerSec = (MAX_BOT_OMEGA);
-            else
               sParam.SpinP.radPerSec = (-MAX_BOT_OMEGA);
+            else
+              sParam.SpinP.radPerSec = (MAX_BOT_OMEGA);
             skillSet->executeSkill(sID, sParam);
             return;
           }
@@ -181,47 +183,41 @@ namespace Strategy
           float factor = (int)Vector2D<int>::dist(state->ballPos,state->homePos[botID]);
           factor /= 5*MAX_BOT_SPEED;
           factor =0;
-          int ballPosX = state->ballPos.x + factor * state->ballVel.x;
-          int ballPosY = state->ballPos.y + factor * state->ballVel.y;
+          int ballPosX = state->ballPos.x;// + factor * state->ballVel.x;
+          int ballPosY = state->ballPos.y;// + factor * state->ballVel.y;
           
           float offset = TAttack::offset;//TAttack::offset * state->ballVel.abs()/6000.0+
-          
-					int x3 = (ballPosX * (ballgoaldist + offset) - offset * OPP_GOAL_X) / ballgoaldist;
+		  if(ForwardX(state->homePos[botID].x) < ballPosX)
+				offset = 0;
+		  int x3 = (ballPosX * (ballgoaldist + offset) - offset * OPP_GOAL_X) / ballgoaldist;
           int y3 = (ballPosY * (ballgoaldist + offset)) / ballgoaldist;
           /// logarithmic search to place offset point in field. */
         //float offset = 600;
-					
-					
-					
 					/****************************** added velocity factor in offset *****************/
-				 factor = 0.4;
-				 int targetX=0,targetY=0;					
-					{
-						printf("Ball Veclocity : x = %f  y = %f\n",avgBallVel.x,avgBallVel.y);
-						int ballBotDist = (int)Vector2D<int>::dist(state->homePos[botID],state->ballPos);
-						printf("delta x = %d   delta y = %d\n",(int)(factor * state->ballVel.x),(int)(factor * state->ballVel.y));
-						
-						targetX = state->ballPos.x + (int)(factor * avgBallVel.x);
-						targetY = state->ballPos.y + (int)(factor * avgBallVel.y);
-						//x3 = targetX;//(targetX * (ballgoaldist + offset) - offset * OPP_GOAL_X) / ballgoaldist;
-						//y3 = targetY;//(targetY * (ballgoaldist + offset)) / ballgoaldist; 
-					}
+			factor = 0.4;
+			int targetX=0,targetY=0;					
+			{
+				printf("Ball Veclocity : x = %f  y = %f\n",avgBallVel.x,avgBallVel.y);
+				int ballBotDist = (int)Vector2D<int>::dist(state->homePos[botID],state->ballPos);
+				printf("delta x = %d   delta y = %d\n",(int)(factor * state->ballVel.x),(int)(factor * state->ballVel.y));
+				targetX = state->ballPos.x + (int)(factor * avgBallVel.x);
+				targetY = state->ballPos.y + (int)(factor * avgBallVel.y);
+			}
 					/**************************** done velocity factor ****************************/
-					
+					    
 					/*************************** Weighted offset *********************************/
 					//weighted value of previously calculated offset and one using ball velocity
 					// P = (P1 + W*P2)/(W + 1)
-					float weight = ((ForwardX(avgBallVel.x) < -100) ? -ForwardX(avgBallVel.x)-100 : 0.00)*sqrt(avgBallVel.y*avgBallVel.y) / (200.0);
-					Vector2D<int> final(0,0);
-					final.x = x3 + weight * targetX;			
-					final.y = y3 + weight * targetY;
-					final.x = final.x/(weight + 1);
-					final.y = final.y/(weight + 1);
-					
-					x3 = final.x, y3 = final.y;
+				float weight = ((ForwardX(avgBallVel.x) < -100) ? -ForwardX(avgBallVel.x)-100 : 0.00)*sqrt(avgBallVel.y*avgBallVel.y) / (200.0);
+				Vector2D<int> final(0,0);
+				final.x = x3 + weight * targetX;			
+				final.y = y3 + weight * targetY;
+				final.x = final.x/(weight + 1);
+				final.y = final.y/(weight + 1);
+				x3 = final.x, y3 = final.y;
 					/************************ Done offset ***************************************/
 					
-					SkillSet::comm->addCircle(x3,y3,300);
+				SkillSet::comm->addCircle(x3,y3,300);
 					
           while(!LocalAvoidance::isPointInField(Point2D<int>(x3, y3))) 
           {

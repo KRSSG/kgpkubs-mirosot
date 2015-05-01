@@ -27,11 +27,11 @@ namespace Strategy
     
     //float omega = turnAngleLeft * MAX_BOT_OMEGA/(16*PI); // Speedup turn
     float factor = (turnAngleLeft+KD_ANGLE*(turnAngleLeft))/(PI/2);
-    vr = -0.4*MAX_BOT_SPEED*(factor)/(PI/2);
+    vr = 0.4*MAX_BOT_SPEED*(factor)/(PI/2);
     //vr = -MAX_BOT_SPEED*(turnAngleLeft)/(PI/2);
     vl = -vr;
     
-    if(fabs(turnAngleLeft) > DRIBBLER_BALL_ANGLE_RANGE) {
+    if(fabs(turnAngleLeft) > 2*DRIBBLER_BALL_ANGLE_RANGE) {
 		#if FIRA_COMM || FIRASSL_COMM
 				comm->sendCommand(botID, vl, vr);        
 		#else

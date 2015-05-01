@@ -23,7 +23,7 @@ SOURCES += main.cpp\
     logger.cc \
     addrinfolist.cc \
     publisher.cpp \
-    ../kgpkubs/Strategy/Core/command-packet.pb.cc
+    command-packet.pb.cc
 INCLUDEPATH += ../kgpkubs/Strategy/Core
 HEADERS  += mainwindow.h \
     udpbroadcast.h \
@@ -33,6 +33,6 @@ HEADERS  += mainwindow.h \
     logger.h \
     addrinfolist.h \
     publisher.h \
-    ../kgpkubs/Strategy/Core/command-packet.pb.h
+    command-packet.pb.h
 
 FORMS    += mainwindow.ui

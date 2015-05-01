@@ -29,7 +29,7 @@ namespace Strategy
       return false;
     }
 
-    int chooseBestBot(std::list<int>& freeBots, const Tactic::Param* tParam) const
+    int chooseBestBot(std::list<int>& freeBots, const Tactic::Param* tParam, int prevID) const
     {
       int minv = *(freeBots.begin());
       int mindis = 10000000;
@@ -86,6 +86,7 @@ namespace Strategy
           sParam.GoToPointP.x = dest_x;
           sParam.GoToPointP.y = dest_y;
           sParam.GoToPointP.finalslope = 0 ;//final_angle;
+					SkillSet::addCircle(sParam.GoToPointP.x,sParam.GoToPointP.y,50, 0x000000);
           skillSet->executeSkill(sID,sParam);
           return;
       }
@@ -107,6 +108,7 @@ namespace Strategy
             if(sParam.GoToPointP.y < (-HALF_FIELD_MAXY+500)){
               sParam.GoToPointP.y = -HALF_FIELD_MAXY+500;
             }
+						SkillSet::addCircle(sParam.GoToPointP.x,sParam.GoToPointP.y,50, 0x000000);
             skillSet->executeSkill(sID,sParam);  //Taking position in the direction of the ball at some distance
       }
       else
@@ -131,7 +133,7 @@ namespace Strategy
             {
             sParam.GoToPointP.y = -HALF_FIELD_MAXY+500;
           }
-          
+          SkillSet::addCircle(sParam.GoToPointP.x,sParam.GoToPointP.y,50, 0x000000);
           skillSet->executeSkill(sID,sParam);
       }
       

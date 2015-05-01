@@ -7,9 +7,6 @@
 #include "tactic.h"
 #include "config.h"
 
-#define N_BOT_DANGER 3
-#define N_GOAL_DANGER 2
-
 namespace Strategy
 {
   class PSuperOffensePlay : public Play
@@ -32,7 +29,7 @@ namespace Strategy
       roleList[1].push_back(std::make_pair(Tactic::Attack,param));
       
       /* Role 3 - Defender */
-      param.BlockP.dist = 2000;
+      param.BlockP.dist = 1000;
       if(state.pr_ball_in_opp_dbox)
         roleList[2].push_back(std::make_pair(Tactic::ChargeBall,param));
       else
@@ -54,11 +51,12 @@ namespace Strategy
     
     inline bool applicable(void) const
     {
-//      int diff = state.oppGoalCount - state.ourGoalCount;
-//      if(diff > N_GOAL_DANGER && state.pr_ballOppSide)
-//        return true;
 			if(!state.pr_gameRunning)
         return false;
+			/*
+			int diff = state.oppGoalCount - state.ourGoalCount;
+			if((diff >= 3 && state.pr_ballOppSide) || (diff <= -3 && state.pr_ballOppSide))
+			*/
       if(state.pr_ball_in_opp_dbox)
         return true;
       return false;

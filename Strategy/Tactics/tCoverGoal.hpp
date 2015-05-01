@@ -38,7 +38,7 @@ public:
       return false;
     }
 
-    int chooseBestBot(std::list<int>& freeBots, const Tactic::Param* tParam) const
+    int chooseBestBot(std::list<int>& freeBots, const Tactic::Param* tParam, int prevID) const
     {
       int minv = *(freeBots.begin());
       int mindis = 1000000000;
@@ -84,7 +84,7 @@ if(dist_from_goal + factor * perpend_dist < mindis)
       {
         //Bot elsewhere in field. Bring the bot to the Goalkeeper position.
         //  Util::Logger::toStdOut("Bot going to goalkeeper positon.");
-        sID = SkillSet::GoToPointGoalie;
+        sID = SkillSet::GoToPoint;
         sParam.GoToPointP.align = false;
         sParam.GoToPointP.finalslope =- PI / 2;
         sParam.GoToPointP.x = ForwardX(-HALF_FIELD_MAXX + GOAL_DEPTH + 4.5*BOT_RADIUS);
@@ -114,7 +114,7 @@ if(0){printf("\n in if(0)\n");}
         {
           state1 = 1;
           //printf("Ball x:%d y:%d v_x:%f v_y:%f\n", state->ballPos.x, state->ballPos.y, state->ballVel.x, state->ballVel.y);
-          sID = SkillSet::GoToPointGoalie;
+          sID = SkillSet::GoToPoint;
           sParam.GoToPointP.x = ForwardX(-HALF_FIELD_MAXX + GOAL_DEPTH + BOT_RADIUS*4.5) /*/4*/;
           int temp = getBotDestPointY();
           sParam.GoToPointP.y = temp;

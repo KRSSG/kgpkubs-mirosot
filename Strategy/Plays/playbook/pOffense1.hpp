@@ -34,7 +34,7 @@ namespace Strategy
       roleList[2].push_back(std::make_pair(Tactic::CoverGoal,param));
       
       /* Role 4 - Mid Field Player/Charger */
-      param.BlockP.dist = 2000;
+      param.BlockP.dist = 1000;
       if(state.pr_ball_in_opp_dbox)
         roleList[3].push_back(std::make_pair(Tactic::ChargeBall,param));
       else
@@ -53,14 +53,14 @@ namespace Strategy
     
     inline bool applicable(void) const
     {
-      
-//      if(!state.pr_nOpponentsOurSide(1) && state.pr_ballOurSide)
-//        return true;
-//      if(state.pr_ballOppSide)
-//        return true;
       if(!state.pr_gameRunning)
         return false;
-      if(state.pr_ballOppSide && !state.pr_ball_in_opp_dbox)
+				
+			/*int diff = state.oppGoalCount - state.ourGoalCount;
+      if(diff <= 3 &&  ( state.pr_ballOppSide || (!state.pr_nOpponentsOurSide(1) && state.pr_ballOurSide) ) )
+        return true;*/
+				
+      if(state.pr_ballOppSide)
         return true;
       return false;
     }

@@ -26,7 +26,7 @@ namespace Strategy
       return false;
     }
 
-    int chooseBestBot(std::list<int>& freeBots, const Tactic::Param* tParam) const
+    int chooseBestBot(std::list<int>& freeBots, const Tactic::Param* tParam, int prevID) const
     {
       int minv = *(freeBots.begin());
       int mindis = fabs(state->homePos[*(freeBots.begin())].x - tParam->DefendP.x);

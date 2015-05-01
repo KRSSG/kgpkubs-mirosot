@@ -34,8 +34,8 @@ namespace Strategy {
   }
   
   inline void adjustRange(float &theta1, float &theta2) {
-    if(abs(theta1-theta2) > PI) {
-      if(abs(theta1) > abs(theta2)) {
+    if(fabs(theta1-theta2) > PI) {
+      if(fabs(theta1) > fabs(theta2)) {
         if(theta1 > 0) {
           theta1 -= 2*PI;
         } else {
@@ -146,14 +146,14 @@ namespace Strategy {
   
   bool Tactic::isBallAchievableInForwardMotion() const {
     return (Vector2D<int>::dist(state->homePos[botID], state->ballPos) > BOT_RADIUS*4) ||
-            (abs(normalizeAngle(Vector2D<int>::angle(state->ballPos, state->homePos[botID]) - state->homeAngle[botID])) < DRIBBLER_BALL_ANGLE_RANGE);
+            (fabs(normalizeAngle(Vector2D<int>::angle(state->ballPos, state->homePos[botID]) - state->homeAngle[botID])) < DRIBBLER_BALL_ANGLE_RANGE);
   }
   
   void Tactic::addsegment(vector<pair<float, float> > &obs, const Vector2D<int> &end1, 
                           const Vector2D<int> &end2, const Vector2D<int> &center) const {
     float theta1 = Vector2D<int>::angle(end1, center);
     float theta2 = Vector2D<int>::angle(end2, center);
-    if(abs(theta1 - theta2) > PI) {
+    if(fabs(theta1 - theta2) > PI) {
       if(theta1 > theta2) {
         obs.push_back(pair<float, float> (theta1, PI));
         obs.push_back(pair<float, float> (-PI, theta2));
@@ -402,7 +402,7 @@ namespace Strategy {
   void Tactic::coverBall() {
     static const int COVER_DISTANCE = 4*BOT_RADIUS;
     int x1 = state->ballPos.x - COVER_DISTANCE, y1 = state->ballPos.y;
-    if(abs(x1) > HALF_FIELD_MAXX) {
+    if(fabs(x1) > HALF_FIELD_MAXX) {
       if(x1 < 0) x1 = -HALF_FIELD_MAXX;
       else       x1 =  HALF_FIELD_MAXX;
       int curd = COVER_DISTANCE - x1 + state->ballPos.x;
@@ -460,7 +460,7 @@ namespace Strategy {
     bool is_goal_clear = getOppGoalClearance(obs, mypos, goaltarget);
     if(is_goal_clear) {
       float targetAngle = (goaltarget.first + goaltarget.second)/2;
-      if(fabs(normalizeAngle(targetAngle - state->homeAngle[botID])) > min(max(abs(normalizeAngle(goaltarget.second - goaltarget.first))/10, 0.01f), 0.05f) ){
+      if(fabs(normalizeAngle(targetAngle - state->homeAngle[botID])) > min(max(fabs(normalizeAngle(goaltarget.second - goaltarget.first))/10, 0.01f), 0.05f) ){
         turnToTargetWithBall(targetAngle);
       } else {
         kickBallFullSpeed();

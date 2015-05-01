@@ -53,10 +53,13 @@ namespace Strategy
     
     inline bool applicable(void) const
     {
-//      if(state.pr_nOpponentsOurSide(1) &&  && !state.pr_nOpponentsOurSide(3))
-//        return true;
-      if(!state.pr_gameRunning)
+			if(!state.pr_gameRunning)
         return false;
+				
+			/*int diff = state.oppGoalCount - state.ourGoalCount;
+      if(diff <=3 &&( state.pr_nOpponentsOurSide(1) && state.pr_ballOurSide && !state.pr_nOpponentsOurSide(3) ))
+        return true;*/
+      
       if(state.pr_ballOurSide && !state.pr_ball_in_our_dbox) 
         return true;
       return false;

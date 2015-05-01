@@ -66,6 +66,7 @@ int kbhit(void)
   if(FD_ISSET(0,&read_fd))
     /* Character pending on stdin */
     return 1;
+
   /* no characters were pending */
   return 0;
 }
@@ -107,6 +108,8 @@ int startgame(bool usePositiveXSide, Simulator::TeamColor color)
   {
     Tester t(run, state);
     if(qtdebug) 
+
+
     {
       t.start();
       QtDebugger qt_debug(a, &state);

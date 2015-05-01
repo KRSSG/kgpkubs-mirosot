@@ -26,7 +26,7 @@ namespace Strategy
       return true;
     }
 
-    int chooseBestBot(std::list<int>& freeBots, const Tactic::Param* tParam) const
+    int chooseBestBot(std::list<int>& freeBots, const Tactic::Param* tParam, int prevID) const
     {
 			/*Arpit: tactic explicitly for Kickoff. chooses the farthest bot on the other side of the field. */
       int maxv = *(freeBots.begin());
@@ -40,16 +40,27 @@ namespace Strategy
           maxv = *it;
         }
       }
-      debug(1, maxv, "assigned Pass");
+      //debug(1, maxv, "assigned Pass");
       return maxv;
     } // chooseBestBot
     void execute(const Param& tParam)
     {
+			if(tState == Tactic::COMPLETED)
+			{
+				sID = SkillSet::Stop;
+				skillSet->executeSkill(sID, sParam);
+				return;
+			}
       printf("Pass BotID: %d\n",botID);
       //tState = RUNNING;
-			if(ForwardX(state->ballPos.x) < -250)
+			if(ForwardX(state->ballPos.x) < -150 || ForwardX(state->homePos[botID].x) <= 0)
 				tState = Tactic::COMPLETED;
-      gotoPointExact(state->ballPos.x, state->ballPos.y, false, 0, MAX_BOT_SPEED);
+			sID = SkillSet::Velocity;
+			int sgn = (FIELD_IS_INVERTED)?(-1):(1);
+			sParam.VelocityP.vl = sgn*40;
+			sParam.VelocityP.vr = sgn*40;
+			skillSet->executeSkill(sID, sParam);		
+      //gotoPointExact(state->ballPos.x, state->ballPos.y, false, 0, MAX_BOT_SPEED);
     }
   };// class TPass
 } // namespace Strategy
